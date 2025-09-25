@@ -6,7 +6,7 @@ import Verify from "./pages/Verify";
 import Menu from "./pages/Menu";
 
 const theme = extendTheme({
-  colors: { brand: { 500: "#1a73e8" } }, // Google blue
+  colors: { brand: { 500: "#1a73e8" } }, // Google Blue
   fonts: {
     heading: "Roboto, sans-serif",
     body: "Roboto, sans-serif",
