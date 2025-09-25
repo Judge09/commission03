@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "Tropical Smoothie",
+    "ingredients": "Mango, Pineapple, Banana",
+    "price": 150,
+    "image": "https://via.placeholder.com/300x200",
+    "allergens": "None"
+  },
+  {
+    "id": 2,
+    "name": "Avocado Toast",
+    "ingredients": "Avocado, Multigrain Bread, Tomato",
+    "price": 120,
+    "image": "https://via.placeholder.com/300x200",
+    "allergens": "Gluten"
+  }
+]
