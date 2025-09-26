@@ -1,18 +1,50 @@
 [
   {
     "id": 1,
-    "name": "Tropical Smoothie",
-    "ingredients": "Mango, Pineapple, Banana",
-    "price": 150,
-    "image": "https://via.placeholder.com/300x200",
-    "allergens": "None"
+    "name": "Berry Blast Smoothie",
+    "description": "Fresh strawberries, blueberries, and banana blended with almond milk.",
+    "category": "Smoothies",
+    "price": 180,
+    "image": "https://images.unsplash.com/photo-1555685812-4e7b7b8c9a8e"
   },
   {
     "id": 2,
+    "name": "Quinoa Salad",
+    "description": "Quinoa with fresh vegetables, feta cheese, and a lemon vinaigrette.",
+    "category": "Salads",
+    "price": 220,
+    "image": "https://images.unsplash.com/photo-1603052874985-3c9e3a3f7a1e"
+  },
+  {
+    "id": 3,
+    "name": "Grilled Chicken Protein Bowl",
+    "description": "Grilled chicken, brown rice, avocado, and steamed veggies.",
+    "category": "Proteins",
+    "price": 280,
+    "image": "https://images.unsplash.com/photo-1589927986089-35812388d1f4"
+  },
+  {
+    "id": 4,
     "name": "Avocado Toast",
-    "ingredients": "Avocado, Multigrain Bread, Tomato",
-    "price": 120,
-    "image": "https://via.placeholder.com/300x200",
-    "allergens": "Gluten"
+    "description": "Whole grain toast topped with smashed avocado and poached egg.",
+    "category": "Low Carb Snacks",
+    "price": 150,
+    "image": "https://images.unsplash.com/photo-1561948955-7f1e3b8c1e4e"
+  },
+  {
+    "id": 5,
+    "name": "Tropical Smoothie",
+    "description": "Pineapple, mango, and coconut water blended to perfection.",
+    "category": "Smoothies",
+    "price": 180,
+    "image": "https://images.unsplash.com/photo-1555685812-4e7b7b8c9a8e"
+  },
+  {
+    "id": 6,
+    "name": "Greek Salad",
+    "description": "Cucumber, tomato, olives, and feta with olive oil dressing.",
+    "category": "Salads",
+    "price": 200,
+    "image": "https://images.unsplash.com/photo-1561948955-7f1e3b8c1e4e"
   }
 ]

@@ -1,36 +1,65 @@
-import { Flex, Box, Heading, Spacer, Button } from "@chakra-ui/react";
-import { supabase } from "../supabaseClient";
-import { useNavigate } from "react-router-dom";
+// src/components/Navbar.jsx
+import React from "react";
+import {
+  Flex,
+  Box,
+  Text,
+  IconButton,
+  Spacer,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 export default function Navbar() {
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/"); // redirect to login
-  };
+  const bg = useColorModeValue("whiteAlpha.900", "gray.800");
 
   return (
     <Flex
-      as="nav"
-      w="100%"
-      p={4}
-      bg="white"
+      as="header"
       align="center"
-      shadow="sm"
+      px={{ base: 4, md: 6 }}
+      py={3}
+      bg={bg}
+      boxShadow="sm"
       position="sticky"
       top={0}
-      zIndex={10}
+      zIndex={20}
     >
-      <Box>
-        <Heading size="md" color="brand.500">
+      {/* Logo */}
+      <Box display="flex" alignItems="center" gap={3}>
+        <Box
+          w="40px"
+          h="40px"
+          rounded="full"
+          bgGradient="linear(to-br, orange.400, orange.500)"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          color="white"
+          fontWeight="bold"
+          fontSize="lg"
+        >
+          🍽
+        </Box>
+        <Text
+          fontWeight="bold"
+          color="orange.600"
+          fontSize={{ base: "lg", md: "xl" }}
+        >
           Soul Good
-        </Heading>
+        </Text>
       </Box>
+
       <Spacer />
-      <Button colorScheme="brand" onClick={handleLogout}>
-        Logout
-      </Button>
+
+      {/* Hamburger menu */}
+      <IconButton
+        aria-label="menu"
+        icon={<HamburgerIcon />}
+        variant="ghost"
+        rounded="md"
+        _hover={{ bg: useColorModeValue("orange.100", "orange.700") }}
+      />
     </Flex>
   );
 }
