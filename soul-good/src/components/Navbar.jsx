@@ -1,65 +1,88 @@
 // src/components/Navbar.jsx
 import React from "react";
 import {
-  Flex,
   Box,
-  Text,
+  Flex,
+  HStack,
+  Link,
   IconButton,
-  Spacer,
-  useColorModeValue,
+  Image,
+  useDisclosure,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  VStack,
+  Button,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 
-export default function Navbar() {
-  const bg = useColorModeValue("whiteAlpha.900", "gray.800");
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "Menu", href: "/menu" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
+
+export default function Navbar({ logo }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Flex
-      as="header"
-      align="center"
-      px={{ base: 4, md: 6 }}
-      py={3}
-      bg={bg}
-      boxShadow="sm"
-      position="sticky"
-      top={0}
-      zIndex={20}
-    >
-      {/* Logo */}
-      <Box display="flex" alignItems="center" gap={3}>
-        <Box
-          w="40px"
-          h="40px"
-          rounded="full"
-          bgGradient="linear(to-br, orange.400, orange.500)"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          color="white"
-          fontWeight="bold"
-          fontSize="lg"
-        >
-          🍽
-        </Box>
-        <Text
-          fontWeight="bold"
-          color="orange.600"
-          fontSize={{ base: "lg", md: "xl" }}
-        >
-          Soul Good
-        </Text>
-      </Box>
+    <Box bg="white" px={4} shadow="md" position="sticky" top="0" zIndex="100">
+      <Flex h={16} alignItems="center" justifyContent="space-between">
+        {/* Logo */}
+        <Link href="/">
+          <Image src={logo} alt="Soul Good Logo" boxSize="50px" objectFit="contain" />
+        </Link>
 
-      <Spacer />
+        {/* Desktop nav links */}
+        <HStack spacing={8} display={{ base: "none", md: "flex" }}>
+          {navLinks.map((link) => (
+            <Link key={link.name} href={link.href} fontWeight="medium" color="gray.700">
+              {link.name}
+            </Link>
+          ))}
+        </HStack>
 
-      {/* Hamburger menu */}
-      <IconButton
-        aria-label="menu"
-        icon={<HamburgerIcon />}
-        variant="ghost"
-        rounded="md"
-        _hover={{ bg: useColorModeValue("orange.100", "orange.700") }}
-      />
-    </Flex>
+        {/* Hamburger for mobile */}
+        <IconButton
+          size="md"
+          icon={<HamburgerIcon />}
+          aria-label="Open Menu"
+          display={{ md: "none" }}
+          onClick={onOpen}
+        />
+      </Flex>
+
+      {/* Mobile Drawer */}
+      <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>
+            <Image src={logo} alt="Soul Good Logo" boxSize="50px" objectFit="contain" />
+          </DrawerHeader>
+          <DrawerBody>
+            <VStack spacing={4} align="start">
+              {navLinks.map((link) => (
+                <Button
+                  key={link.name}
+                  as={Link}
+                  href={link.href}
+                  variant="ghost"
+                  w="full"
+                  justifyContent="flex-start"
+                  onClick={onClose}
+                >
+                  {link.name}
+                </Button>
+              ))}
+            </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </Box>
   );
 }

@@ -9,39 +9,35 @@ import {
   VStack,
   HStack,
   Button,
-  useColorModeValue,
+  useDisclosure,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalCloseButton,
   ModalFooter,
-  useDisclosure,
+  ModalCloseButton,
   Stack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 
-export default function MenuItemCard({ item, imgFallback = "/images/menu/default-food.jpg" }) {
+export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bg = useColorModeValue("white", "gray.800");
-  const hoverBg = useColorModeValue("orange.50", "orange.900");
 
   return (
     <>
       <Box
         bg={bg}
         rounded="2xl"
-        shadow="md"
-        overflow="hidden"
+        shadow="sm"
         borderWidth="1px"
-        borderColor="rgba(0,0,0,0.03)"
+        borderColor="rgba(0,0,0,0.05)"
+        overflow="hidden"
         transition="all 0.3s"
-        _hover={{ transform: "translateY(-3px)", shadow: "xl", bg: hoverBg }}
-        cursor="pointer"
-        maxH="500px"
-        display="flex"
-        flexDirection="column"
+        _hover={{ shadow: "xl", transform: "translateY(-5px)" }}
       >
+        {/* Image + Price Badge */}
         <Box position="relative">
           <Image
             src={item.image || imgFallback}
@@ -49,11 +45,7 @@ export default function MenuItemCard({ item, imgFallback = "/images/menu/default
             objectFit="cover"
             w="100%"
             h={{ base: "180px", md: "220px" }}
-            fallbackSrc={imgFallback}
-            transition="transform 0.3s"
-            _hover={{ transform: "scale(1.05)" }}
           />
-
           <Badge
             position="absolute"
             top={3}
@@ -70,7 +62,8 @@ export default function MenuItemCard({ item, imgFallback = "/images/menu/default
           </Badge>
         </Box>
 
-        <VStack align="start" spacing={3} p={5} flex="1">
+        {/* Card Content */}
+        <VStack align="start" spacing={3} p={4}>
           <HStack justify="space-between" w="100%">
             <Heading size="md">{item.name}</Heading>
             {item.badge && (
@@ -80,7 +73,7 @@ export default function MenuItemCard({ item, imgFallback = "/images/menu/default
             )}
           </HStack>
 
-          <Text color="gray.600" fontSize="sm" noOfLines={3}>
+          <Text color="gray.600" fontSize="sm" noOfLines={2}>
             {item.description}
           </Text>
 
@@ -92,7 +85,7 @@ export default function MenuItemCard({ item, imgFallback = "/images/menu/default
             ))}
           </HStack>
 
-          <HStack justify="space-between" w="100%" pt={2}>
+          <HStack justify="space-between" w="100%">
             <Text fontSize="sm" color="gray.500">
               {item.calories} cal
             </Text>
@@ -105,8 +98,8 @@ export default function MenuItemCard({ item, imgFallback = "/images/menu/default
             variant="outline"
             colorScheme="orange"
             w="full"
-            onClick={onOpen}
             borderRadius="lg"
+            onClick={onOpen}
           >
             More Info
           </Button>
@@ -125,7 +118,6 @@ export default function MenuItemCard({ item, imgFallback = "/images/menu/default
                 src={item.image || imgFallback}
                 alt={item.name}
                 borderRadius="md"
-                fallbackSrc={imgFallback}
               />
               <HStack justify="space-between">
                 {item.badge && (
@@ -153,9 +145,10 @@ export default function MenuItemCard({ item, imgFallback = "/images/menu/default
               </HStack>
             </Stack>
           </ModalBody>
-
           <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose} colorScheme="orange">
+              Close
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
