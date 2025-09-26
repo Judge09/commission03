@@ -1,138 +1,121 @@
-import { useState } from "react";
-import { VStack, Heading, Input, Button, Text, Flex } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Center,
+  Input,
+  Text,
+  VStack,
+  Image,
+} from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import emailjs from "@emailjs/browser";
-
-function maskEmail(email) {
-  const [user, domain] = email.split("@");
-  if (user.length <= 2) return "*@" + domain;
-  return user[0] + "*".repeat(user.length - 2) + user.slice(-1) + "@" + domain;
-}
 
 export default function Verify() {
   const [code, setCode] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [timer, setTimer] = useState(0);
   const navigate = useNavigate();
-
-  const email = localStorage.getItem("verificationEmail") || "";
-  const maskedEmail = maskEmail(email);
+  const location = useLocation();
+  const email = location.state?.email;
 
   const handleVerify = async () => {
-    setErrorMsg("");
-
-    if (!code || code.length !== 6) {
-      setErrorMsg("Enter the 6-digit code");
-      return;
-    }
-
-    const { data, error } = await supabase
+    const { data: otp } = await supabase
       .from("otps")
       .select("*")
       .eq("email", email)
       .eq("code", code)
-      .eq("used", false)
-      .limit(1)
       .single();
 
-    if (error || !data) {
-      setErrorMsg("Incorrect or expired OTP");
-      return;
+    if (otp) {
+      const now = new Date();
+      const expiry = new Date(otp.expires_at);
+      if (now < expiry) {
+        navigate("/menu");
+      } else {
+        alert("OTP expired!");
+      }
+    } else {
+      alert("Invalid code!");
     }
-
-    if (new Date() > new Date(data.expires_at)) {
-      setErrorMsg("OTP expired. Please request a new code.");
-      return;
-    }
-
-    // Mark OTP as used
-    await supabase.from("otps").update({ used: true }).eq("id", data.id);
-
-    // Add user to users table if not exists
-    const { error: userError } = await supabase
-      .from("users")
-      .upsert({ email }, { onConflict: "email" });
-    if (userError) console.error(userError);
-
-    navigate("/menu");
   };
 
-  const resendCode = async () => {
+  const handleResend = async () => {
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
     const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiryTime = new Date(new Date().getTime() + 15 * 60000);
 
-    // Insert new OTP into Supabase
-    const { error } = await supabase
-      .from("otps")
-      .insert({ email, code: newCode, expires_at: expiryTime.toISOString() });
-    if (error) {
-      console.error(error);
-      setErrorMsg("Failed to resend code");
-      return;
-    }
+    await supabase.from("otps").insert([
+      { email, code: newCode, expires_at: expiresAt }
+    ]);
 
-    try {
-      console.log("Resending EmailJS payload:", {
-        email,
-        passcode: newCode,
-        time: expiryTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      });
-
-      await emailjs.send(
-        "service_pn1ecn9",       // replace
-        "template_xqsd4l8",          // replace
-        {
-          email: email,          // matches {{email}} in template
-          passcode: newCode,
-          time: expiryTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        },
-        "B3qq_r0cNoHULpzEV"        // replace
-      );
-
-      alert(`Verification code resent to ${maskedEmail}`);
-    } catch (err) {
-      console.error(err);
-      setErrorMsg("Failed to resend code");
-    }
+    alert(`New OTP sent to ${email}`);
+    setTimer(30);
   };
+
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timer]);
 
   return (
-    <Flex h="100vh" align="center" justify="center" bg="gray.50" px={4}>
-      <VStack spacing={6} w="full" maxW="400px" p={10} bg="white" borderRadius="xl" boxShadow="lg">
-        <Heading size="lg">Verify your email</Heading>
-        <Text color="gray.600" fontSize="sm" textAlign="center">
-          Enter the 6-digit code sent to <b>{maskedEmail}</b>
-        </Text>
-
-        <VStack spacing={4} w="full">
-          <Input
-            placeholder="Enter verification code"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            size="lg"
-            borderRadius="full"
-            boxShadow="sm"
-            focusBorderColor="brand.500"
+    <Center minH="100vh" bg="#202124">
+      <Box
+        bg="#171717"
+        p={10}
+        rounded="lg"
+        shadow="lg"
+        w="400px"
+        color="white"
+      >
+        <VStack spacing={4} align="stretch">
+          <Image
+            src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
+            alt="Google Logo"
+            h="40px"
+            mx="auto"
           />
-          {errorMsg && (
-            <Text color="red.500" fontSize="sm">
-              {errorMsg}
-            </Text>
-          )}
+          <Text fontSize="2xl" fontWeight="medium">
+            Verify your identity
+          </Text>
+          <Text fontSize="sm" color="gray.400">
+            Enter the 6-digit code sent to {email}
+          </Text>
+          <Input
+            type="tel"
+            inputMode="numeric"
+            maxLength={6}
+            placeholder="Enter 6-digit code"
+            value={code}
+            onChange={(e) =>
+              setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+            }
+            bg="#202124"
+            borderColor="#5f6368"
+            _focus={{ borderColor: "#1a73e8" }}
+          />
           <Button
-            colorScheme="brand"
-            w="full"
-            size="lg"
-            borderRadius="full"
+            bg="#1a73e8"
+            color="white"
+            _hover={{ bg: "#1765cc" }}
             onClick={handleVerify}
+            isDisabled={code.length !== 6}
           >
             Verify
           </Button>
-          <Button variant="link" colorScheme="brand" onClick={resendCode}>
-            Resend code
+          <Button
+            variant="ghost"
+            color="#1a73e8"
+            _hover={{ bg: "rgba(26,115,232,0.1)" }}
+            onClick={handleResend}
+            isDisabled={timer > 0}
+          >
+            {timer > 0 ? `Resend code (${timer}s)` : "Resend code"}
           </Button>
         </VStack>
-      </VStack>
-    </Flex>
+      </Box>
+    </Center>
   );
 }

