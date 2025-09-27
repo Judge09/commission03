@@ -14,10 +14,16 @@ import {
   Image,
   Link,
   useColorModeValue,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import { FaInstagram, FaFacebook } from "react-icons/fa";
-import Navbar from "../components/Navbar";
-import MenuItemCard from "../components/MenuItemCard";
 import menuItemsData from "../data/menuItems.json";
 import Logo from "/soul-good-logo.png";
 
@@ -32,6 +38,8 @@ export default function Menu() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [activePromo, setActivePromo] = useState(0);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Auto-rotate promos every 5 seconds
   useEffect(() => {
@@ -64,12 +72,53 @@ export default function Menu() {
   }, [query, category]);
 
   const cardBg = useColorModeValue("white", "gray.800");
-
   const nextPromo = () => setActivePromo((prev) => (prev + 1) % promos.length);
+
+  // Simulate logout (redirect to login)
+  const handleLogout = () => {
+    onClose();
+    window.location.href = "/login"; // redirect
+  };
 
   return (
     <Box minH="100vh" bgGradient="linear(to-b, orange.50, orange.100)">
-      <Navbar logo={Logo} />
+      {/* Top bar with logo + logout */}
+      <HStack
+        justify="space-between"
+        align="center"
+        px={{ base: 4, md: 8 }}
+        py={3}
+        bg="white"
+        boxShadow="sm"
+      >
+        <HStack spacing={3}>
+          <Image src={Logo} alt="Soul Good Logo" boxSize="40px" />
+          <Heading fontSize="lg" color="orange.600">
+            Soul Good Cafe
+          </Heading>
+        </HStack>
+        <Button colorScheme="orange" variant="outline" size="sm" onClick={onOpen}>
+          Logout
+        </Button>
+      </HStack>
+
+      {/* Logout Confirmation Modal */}
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Confirm Logout</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>Are you sure you want to log out?</ModalBody>
+          <ModalFooter>
+            <Button variant="ghost" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button colorScheme="orange" ml={3} onClick={handleLogout}>
+              Logout
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* Hero Section */}
       <Box
@@ -101,7 +150,7 @@ export default function Menu() {
           <Text fontSize={{ base: "sm", md: "md" }} mb={4} textAlign={{ base: "center", md: "left" }}>
             📍 57 E Capitol Dr, Kapitolyo, Pasig, Philippines
           </Text>
-          <HStack spacing={4}>
+          <HStack spacing={4} mb={4}>
             <Link href="https://instagram.com/soulgood.ph" isExternal>
               <FaInstagram size={28} />
             </Link>
@@ -109,6 +158,18 @@ export default function Menu() {
               <FaFacebook size={28} />
             </Link>
           </HStack>
+          <Button
+            as={Link}
+            href="https://soulgoodph.com/delivery"
+            isExternal
+            colorScheme="whiteAlpha"
+            size="md"
+            bg="white"
+            color="orange.600"
+            _hover={{ bg: "orange.100" }}
+          >
+            Order Delivery
+          </Button>
         </Box>
 
         {/* Right Side: Promo Image */}
@@ -210,12 +271,34 @@ export default function Menu() {
             gap={6}
           >
             {filtered.map((item) => (
-              <MenuItemCard
+              <Box
                 key={item.id}
-                item={item}
-                cardBg={cardBg}
-                imgFallback="/default-food.jpg"
-              />
+                bg={cardBg}
+                borderRadius="xl"
+                boxShadow="sm"
+                overflow="hidden"
+                p={4}
+              >
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  borderRadius="md"
+                  mb={3}
+                  objectFit="cover"
+                  w="100%"
+                  h="160px"
+                  fallbackSrc="/default-food.jpg"
+                />
+                <Heading fontSize="lg" mb={1}>
+                  {item.name}
+                </Heading>
+                <Text fontSize="sm" color="gray.600" mb={2}>
+                  {item.description}
+                </Text>
+                <Text fontWeight="bold" color="orange.600">
+                  ₱{item.price}
+                </Text>
+              </Box>
             ))}
           </Box>
         </VStack>
