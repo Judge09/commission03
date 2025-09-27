@@ -35,13 +35,14 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
 
   return (
     <>
+      {/* Default Card (unchanged) */}
       <Box
         bg={bg}
         rounded="2xl"
         shadow="md"
         overflow="hidden"
         borderWidth="1px"
-        borderColor="rgba(0,0,0,0.03)"
+        borderColor="rgba(0,0,0,0.05)"
         cursor="pointer"
         role="button"
         tabIndex={0}
@@ -56,7 +57,7 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
             alt={item.name}
             objectFit="cover"
             w="100%"
-            h={{ base: "180px", md: "220px" }}
+            h={{ base: "160px", md: "220px" }}
             fallbackSrc={imgFallback}
           />
 
@@ -76,51 +77,45 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
           </Badge>
         </Box>
 
-        <VStack align="start" spacing={3} p={5}>
-          <HStack justify="space-between" w="100%">
-            <Heading size="md" color={textColor}>
-              {item.name}
-            </Heading>
-          </HStack>
+        <VStack
+          align="start"
+          spacing={2}
+          p={4}
+          minH={{ base: "100px", md: "auto" }}
+        >
+          <Heading size="sm" color={textColor} noOfLines={1}>
+            {item.name}
+          </Heading>
 
-          <Text color="gray.500" fontSize="sm" noOfLines={2}>
+          {/* Mobile hides extra stuff */}
+          <Text
+            color="gray.500"
+            fontSize="xs"
+            noOfLines={1}
+            display={{ base: "none", md: "block" }}
+          >
             {item.description || "—"}
           </Text>
 
-          {/* Tags */}
-          {item.tags && item.tags.length > 0 && (
-            <HStack spacing={2} wrap="wrap">
-              {item.tags.map((t) => (
-                <Badge key={t} colorScheme="orange" variant="subtle">
-                  {t}
-                </Badge>
-              ))}
-            </HStack>
-          )}
-
-          {/* Nutrition preview (just calories + protein quick peek) */}
-          <HStack justify="space-between" w="100%" pt={2}>
-            <Text fontSize="sm" color="gray.500">
-              {item.calories ? `${item.calories}` : "—"}
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              {item.protein ? `${item.protein} protein` : "— protein"}
-            </Text>
-          </HStack>
-
-          <Text fontSize="xs" color="gray.400" mt={2}>
-            Tap anywhere on the card for details
+          {/* Quick tip for mobile */}
+          <Text fontSize="xs" color="gray.400" mt={1}>
+            Tap for details
           </Text>
         </VStack>
       </Box>
 
-      {/* Details Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg" isCentered>
+      {/* Modal (adjusted for mobile, scrollable) */}
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={{ base: "sm", md: "md", lg: "lg" }}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{item.name}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody maxH="70vh" overflowY="auto">
             <Stack spacing={4}>
               <Image
                 src={item.image || imgFallback}
@@ -128,6 +123,7 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
                 borderRadius="md"
                 objectFit="cover"
                 fallbackSrc={imgFallback}
+                maxH={{ base: "180px", md: "250px" }}
               />
 
               <HStack justify="space-between">
@@ -140,7 +136,6 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
                 {item.description || "No description available."}
               </Text>
 
-              {/* Tags */}
               {item.tags && item.tags.length > 0 && (
                 <HStack spacing={2} wrap="wrap">
                   {item.tags.map((t) => (
@@ -153,7 +148,6 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
 
               <Divider />
 
-              {/* Nutrition */}
               <Box>
                 <Heading size="sm" mb={2}>
                   Nutrition
@@ -180,7 +174,6 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
                 </Stack>
               </Box>
 
-              {/* Allergens */}
               {item.allergens && item.allergens.length > 0 && (
                 <Box>
                   <Heading size="sm" mb={2}>
