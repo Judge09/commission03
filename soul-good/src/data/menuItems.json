@@ -5,7 +5,7 @@
     "category": "Smoothies",
     "description": "Blueberries, Banana, Chia",
     "price": 220,
-    "image": "/menu-images/give-me-that-glow.jpg",
+    "image": "/1.png",
     "calories": null,
     "protein": null,
     "tags": ["Smoothie"]
@@ -16,7 +16,7 @@
     "category": "Smoothies",
     "description": "Dragonfruit, Mango, Chia, Mint",
     "price": 325,
-    "image": "/menu-images/dragon-fruit-youth-elixir.jpg",
+    "image": "/2.png",
     "calories": null,
     "protein": null,
     "tags": ["Smoothie"]
@@ -27,7 +27,7 @@
     "category": "Smoothies",
     "description": "Yakult, Strawberry, Banana",
     "price": 220,
-    "image": "/menu-images/gut-glow.jpg",
+    "image": "/3.png",
     "calories": null,
     "protein": null,
     "tags": ["Smoothie"]
@@ -38,7 +38,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 140,
-    "image": "/menu-images/cafe-americano.jpg",
+    "image": "/4.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Non-Sweet"]
@@ -49,7 +49,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 160,
-    "image": "/menu-images/artistic-cafe-latte.jpg",
+    "image": "/5.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Latte"]
@@ -60,7 +60,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 180,
-    "image": "/menu-images/bulletproof-coffee.jpg",
+    "image": "/6.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "High-Fat"]
@@ -71,7 +71,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 170,
-    "image": "/menu-images/caramel-latte.jpg",
+    "image": "/7.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Latte"]
@@ -82,7 +82,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 170,
-    "image": "/menu-images/honey-cinnamon-oat-latte.jpg",
+    "image": "/8.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Latte", "Oat Milk"]
@@ -93,7 +93,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 170,
-    "image": "/menu-images/coconut-agave-latte.jpg",
+    "image": "/9.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Latte", "Vegan"]
@@ -104,7 +104,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 170,
-    "image": "/menu-images/feelgood-cappuccino.jpg",
+    "image": "/10.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Cappuccino"]
@@ -115,7 +115,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 170,
-    "image": "/menu-images/spanish-sun-latte.jpg",
+    "image": "/11.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Latte"]
@@ -126,7 +126,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 160,
-    "image": "/menu-images/honey-sunrise-milk-foam.jpg",
+    "image": "/12.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Latte"]
@@ -137,7 +137,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 180,
-    "image": "/menu-images/dirty-matcha.jpg",
+    "image": "/13.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Matcha"]
@@ -148,7 +148,7 @@
     "category": "Soul Coffee",
     "description": "Plainsight Beans",
     "price": 100,
-    "image": "/menu-images/espresso-shot.jpg",
+    "image": "/14.png",
     "calories": null,
     "protein": null,
     "tags": ["Coffee", "Espresso"]
@@ -159,7 +159,7 @@
     "category": "Non-Coffee Drinks",
     "description": "",
     "price": 160,
-    "image": "/menu-images/chocolate-zen.jpg",
+    "image": "/15.png",
     "calories": null,
     "protein": null,
     "tags": ["Non-Coffee"]
@@ -170,7 +170,7 @@
     "category": "Non-Coffee Drinks",
     "description": "",
     "price": 160,
-    "image": "/menu-images/matcha-bliss-latte.jpg",
+    "image": "/16.png",
     "calories": null,
     "protein": null,
     "tags": ["Non-Coffee", "Matcha"]
@@ -181,7 +181,7 @@
     "category": "Non-Coffee Drinks",
     "description": "",
     "price": 180,
-    "image": "/menu-images/golden-turmeric-latte.jpg",
+    "image": "/17.png",
     "calories": null,
     "protein": null,
     "tags": ["Non-Coffee", "Latte", "Vegan"]
@@ -192,7 +192,7 @@
     "category": "Add-Ons",
     "description": "Add espresso shot",
     "price": 25,
-    "image": "/menu-images/espresso-shot-addon.jpg",
+    "image": "/18.png",
     "calories": null,
     "protein": null,
     "tags": ["Add-On"]
@@ -203,7 +203,7 @@
     "category": "Add-Ons",
     "description": "Add honey",
     "price": 25,
-    "image": "/menu-images/honey-addon.jpg",
+    "image": "/19.png",
     "calories": null,
     "protein": null,
     "tags": ["Add-On"]
@@ -214,7 +214,7 @@
     "category": "Add-Ons",
     "description": "Add oat milk",
     "price": 40,
-    "image": "/menu-images/oat-milk-addon.jpg",
+    "image": "/20.png",
     "calories": null,
     "protein": null,
     "tags": ["Add-On", "Vegan"]
@@ -225,7 +225,7 @@
     "category": "Add-Ons",
     "description": "Add vanilla syrup",
     "price": 30,
-    "image": "/menu-images/vanilla-syrup-addon.jpg",
+    "image": "/21.png",
     "calories": null,
     "protein": null,
     "tags": ["Add-On"]
@@ -236,7 +236,7 @@
     "category": "Add-Ons",
     "description": "Add dark chocolate sauce",
     "price": 30,
-    "image": "/menu-images/dark-chocolate-sauce-addon.jpg",
+    "image": "/22.png",
     "calories": null,
     "protein": null,
     "tags": ["Add-On"]
@@ -247,7 +247,7 @@
     "category": "Add-Ons",
     "description": "Add caramel sauce",
     "price": 30,
-    "image": "/menu-images/caramel-sauce-addon.jpg",
+    "image": "/23.png",
     "calories": null,
     "protein": null,
     "tags": ["Add-On"]
@@ -258,7 +258,7 @@
     "category": "Wraps",
     "description": "Grilled chicken, romaine, Caesar dressing, whole wheat wrap",
     "price": 250,
-    "image": "/menu-images/chicken-caesar-wrap.jpg",
+    "image": "/24.png",
     "calories": null,
     "protein": null,
     "tags": ["Wrap"]
@@ -269,7 +269,7 @@
     "category": "Wraps",
     "description": "Falafel, hummus, spinach, cucumber, tomato",
     "price": 260,
-    "image": "/menu-images/vegan-power-wrap.jpg",
+    "image": "/25.png",
     "calories": null,
     "protein": null,
     "tags": ["Wrap", "Vegan"]
@@ -280,7 +280,7 @@
     "category": "Wraps",
     "description": "Roasted turkey, avocado, lettuce, tomato, whole wheat wrap",
     "price": 270,
-    "image": "/menu-images/turkey-avocado-wrap.jpg",
+    "image": "/26.png",
     "calories": null,
     "protein": null,
     "tags": ["Wrap"]
@@ -291,7 +291,7 @@
     "category": "Wraps",
     "description": "Grilled veggies, feta, hummus, spinach, tomato",
     "price": 240,
-    "image": "/menu-images/mediterranean-veggie-wrap.jpg",
+    "image": "/27.png",
     "calories": null,
     "protein": null,
     "tags": ["Wrap", "Vegetarian"]
@@ -302,7 +302,7 @@
     "category": "Salads",
     "description": "Quinoa, cherry tomatoes, cucumber, avocado, vinaigrette",
     "price": 280,
-    "image": "/menu-images/quinoa-super-salad.jpg",
+    "image": "/28.png",
     "calories": null,
     "protein": null,
     "tags": ["Salad", "Vegan"]
@@ -313,7 +313,7 @@
     "category": "Salads",
     "description": "Grilled chicken, mixed greens, cherry tomatoes, balsamic dressing",
     "price": 300,
-    "image": "/menu-images/grilled-chicken-salad.jpg",
+    "image": "/29.png",
     "calories": null,
     "protein": null,
     "tags": ["Salad"]
@@ -324,7 +324,7 @@
     "category": "Salads",
     "description": "Spinach, feta cheese, walnuts, cherry tomatoes, vinaigrette",
     "price": 270,
-    "image": "/menu-images/spinach-feta-salad.jpg",
+    "image": "/30.png",
     "calories": null,
     "protein": null,
     "tags": ["Salad", "Vegetarian"]
@@ -335,7 +335,7 @@
     "category": "Proteins",
     "description": "Grilled chicken with teriyaki sauce",
     "price": 250,
-    "image": "/menu-images/teriyaki-chicken.jpg",
+    "image": "/31.png",
     "calories": null,
     "protein": null,
     "tags": ["Protein"]
@@ -346,7 +346,7 @@
     "category": "Proteins",
     "description": "Grilled salmon with lemon herb sauce",
     "price": 350,
-    "image": "/menu-images/grilled-salmon.jpg",
+    "image": "/32.png",
     "calories": null,
     "protein": null,
     "tags": ["Protein"]
@@ -357,7 +357,7 @@
     "category": "Proteins",
     "description": "Pan-seared tofu with teriyaki glaze",
     "price": 220,
-    "image": "/menu-images/tofu-steak.jpg",
+    "image": "/33.png",
     "calories": null,
     "protein": null,
     "tags": ["Protein", "Vegan"]
@@ -368,7 +368,7 @@
     "category": "Bowls",
     "description": "Brown rice, grilled chicken, veggies, teriyaki sauce",
     "price": 300,
-    "image": "/menu-images/protein-bowl.jpg",
+    "image": "/34.png",
     "calories": null,
     "protein": null,
     "tags": ["Bowl", "High-Protein"]
@@ -379,7 +379,7 @@
     "category": "Bowls",
     "description": "Quinoa, chickpeas, avocado, veggies, tahini dressing",
     "price": 280,
-    "image": "/menu-images/vegan-buddha-bowl.jpg",
+    "image": "/35.png",
     "calories": null,
     "protein": null,
     "tags": ["Bowl", "Vegan"]
@@ -390,7 +390,7 @@
     "category": "Bowls",
     "description": "Sushi rice, salmon, avocado, cucumber, sesame",
     "price": 350,
-    "image": "/menu-images/salmon-poke-bowl.jpg",
+    "image": "/36.png",
     "calories": null,
     "protein": null,
     "tags": ["Bowl"]

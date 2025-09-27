@@ -1,4 +1,3 @@
-// src/pages/Menu.jsx
 import React, { useMemo, useState, useEffect } from "react";
 import {
   Box,
@@ -26,6 +25,7 @@ import {
 import { FaInstagram, FaFacebook } from "react-icons/fa";
 import menuItemsData from "../data/menuItems.json";
 import Logo from "/soul-good-logo.png";
+import MenuItemCard from "../components/MenuItemCard";
 
 // Promo images
 const promos = [
@@ -66,12 +66,11 @@ export default function Menu() {
       const matchesQuery =
         !query ||
         item.name.toLowerCase().includes(query.toLowerCase()) ||
-        item.description.toLowerCase().includes(query.toLowerCase());
+        (item.description || "").toLowerCase().includes(query.toLowerCase());
       return matchesCat && matchesQuery;
     });
   }, [query, category]);
 
-  const cardBg = useColorModeValue("white", "gray.800");
   const nextPromo = () => setActivePromo((prev) => (prev + 1) % promos.length);
 
   // Simulate logout (redirect to login)
@@ -129,7 +128,7 @@ export default function Menu() {
         display={{ base: "block", md: "flex" }}
         boxShadow="md"
       >
-        {/* Left Side: Static Details */}
+        {/* Left Side */}
         <Box
           flex="1"
           bgGradient="linear(to-b, orange.400, orange.500)"
@@ -220,7 +219,7 @@ export default function Menu() {
 
           {/* Categories */}
           <Box>
-            {/* Desktop: Horizontal buttons */}
+            {/* Desktop */}
             <HStack spacing={3} wrap="wrap" display={{ base: "none", md: "flex" }}>
               {Object.entries(categories).map(([cat, count]) => (
                 <Button
@@ -242,7 +241,7 @@ export default function Menu() {
               ))}
             </HStack>
 
-            {/* Mobile: Dropdown select */}
+            {/* Mobile */}
             <Box display={{ base: "block", md: "none" }} mt={2}>
               <select
                 value={category}
@@ -271,34 +270,11 @@ export default function Menu() {
             gap={6}
           >
             {filtered.map((item) => (
-              <Box
+              <MenuItemCard
                 key={item.id}
-                bg={cardBg}
-                borderRadius="xl"
-                boxShadow="sm"
-                overflow="hidden"
-                p={4}
-              >
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  borderRadius="md"
-                  mb={3}
-                  objectFit="cover"
-                  w="100%"
-                  h="160px"
-                  fallbackSrc="/default-food.jpg"
-                />
-                <Heading fontSize="lg" mb={1}>
-                  {item.name}
-                </Heading>
-                <Text fontSize="sm" color="gray.600" mb={2}>
-                  {item.description}
-                </Text>
-                <Text fontWeight="bold" color="orange.600">
-                  ₱{item.price}
-                </Text>
-              </Box>
+                item={item}
+                imgFallback="/default-food.jpg"
+              />
             ))}
           </Box>
         </VStack>
