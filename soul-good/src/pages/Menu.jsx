@@ -235,7 +235,7 @@ const randomIcons = useMemo(() => {
               <Link href="https://instagram.com/soulgood.ph" isExternal>
                 <FaInstagram size={28} />
               </Link>
-              <Link href="https://facebook.com/soulgood" isExternal>
+              <Link href="https://web.facebook.com/profile.php?id=61562474990748" isExternal>
                 <FaFacebook size={28} />
               </Link>
             </HStack>
