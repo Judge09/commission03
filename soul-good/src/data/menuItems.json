@@ -6,9 +6,10 @@
     "description": "Blueberries, Banana, Chia",
     "price": 220,
     "image": "/1.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Smoothie"]
+    "calories": "220 kcal",
+    "protein": "5 g",
+    "tags": ["Smoothie", "Antioxidant"],
+    "allergens": ["None"]
   },
   {
     "id": 2,
@@ -17,9 +18,10 @@
     "description": "Dragonfruit, Mango, Chia, Mint",
     "price": 325,
     "image": "/2.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Smoothie"]
+    "calories": "300 kcal",
+    "protein": "4 g",
+    "tags": ["Smoothie", "Superfood"],
+    "allergens": ["None"]
   },
   {
     "id": 3,
@@ -28,9 +30,10 @@
     "description": "Yakult, Strawberry, Banana",
     "price": 220,
     "image": "/3.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Smoothie"]
+    "calories": "250 kcal",
+    "protein": "6 g",
+    "tags": ["Smoothie", "Probiotic"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 4,
@@ -39,9 +42,10 @@
     "description": "Plainsight Beans",
     "price": 140,
     "image": "/4.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Non-Sweet"]
+    "calories": "10 kcal",
+    "protein": "0 g",
+    "tags": ["Coffee", "Non-Sweet"],
+    "allergens": ["None"]
   },
   {
     "id": 5,
@@ -50,9 +54,10 @@
     "description": "Plainsight Beans",
     "price": 160,
     "image": "/5.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Latte"]
+    "calories": "120 kcal",
+    "protein": "6 g",
+    "tags": ["Coffee", "Latte"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 6,
@@ -61,9 +66,10 @@
     "description": "Plainsight Beans",
     "price": 180,
     "image": "/6.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "High-Fat"]
+    "calories": "230 kcal",
+    "protein": "1 g",
+    "tags": ["Coffee", "High-Fat"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 7,
@@ -72,9 +78,10 @@
     "description": "Plainsight Beans",
     "price": 170,
     "image": "/7.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Latte"]
+    "calories": "180 kcal",
+    "protein": "6 g",
+    "tags": ["Coffee", "Latte"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 8,
@@ -83,9 +90,10 @@
     "description": "Plainsight Beans",
     "price": 170,
     "image": "/8.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Latte", "Oat Milk"]
+    "calories": "160 kcal",
+    "protein": "3 g",
+    "tags": ["Coffee", "Latte", "Oat Milk"],
+    "allergens": ["Gluten (Oats)"]
   },
   {
     "id": 9,
@@ -94,9 +102,10 @@
     "description": "Plainsight Beans",
     "price": 170,
     "image": "/9.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Latte", "Vegan"]
+    "calories": "150 kcal",
+    "protein": "2 g",
+    "tags": ["Coffee", "Latte", "Vegan"],
+    "allergens": ["Tree Nuts (Coconut)"]
   },
   {
     "id": 10,
@@ -105,9 +114,10 @@
     "description": "Plainsight Beans",
     "price": 170,
     "image": "/10.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Cappuccino"]
+    "calories": "130 kcal",
+    "protein": "6 g",
+    "tags": ["Coffee", "Cappuccino"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 11,
@@ -116,9 +126,10 @@
     "description": "Plainsight Beans",
     "price": 170,
     "image": "/11.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Latte"]
+    "calories": "170 kcal",
+    "protein": "6 g",
+    "tags": ["Coffee", "Latte"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 12,
@@ -127,9 +138,10 @@
     "description": "Plainsight Beans",
     "price": 160,
     "image": "/12.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Latte"]
+    "calories": "150 kcal",
+    "protein": "5 g",
+    "tags": ["Coffee", "Latte"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 13,
@@ -138,9 +150,10 @@
     "description": "Plainsight Beans",
     "price": 180,
     "image": "/13.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Matcha"]
+    "calories": "170 kcal",
+    "protein": "5 g",
+    "tags": ["Coffee", "Matcha"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 14,
@@ -149,42 +162,46 @@
     "description": "Plainsight Beans",
     "price": 100,
     "image": "/14.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Coffee", "Espresso"]
+    "calories": "5 kcal",
+    "protein": "0 g",
+    "tags": ["Coffee", "Espresso"],
+    "allergens": ["None"]
   },
   {
     "id": 15,
     "name": "Chocolate Zen",
     "category": "Non-Coffee Drinks",
-    "description": "",
+    "description": "Rich chocolate latte",
     "price": 160,
     "image": "/15.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Non-Coffee"]
+    "calories": "210 kcal",
+    "protein": "6 g",
+    "tags": ["Non-Coffee"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 16,
     "name": "Matcha Bliss Latte",
     "category": "Non-Coffee Drinks",
-    "description": "",
+    "description": "Matcha with steamed milk",
     "price": 160,
     "image": "/16.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Non-Coffee", "Matcha"]
+    "calories": "140 kcal",
+    "protein": "6 g",
+    "tags": ["Non-Coffee", "Matcha"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 17,
     "name": "Golden Turmeric Latte",
     "category": "Non-Coffee Drinks",
-    "description": "",
+    "description": "Turmeric, spices, and milk",
     "price": 180,
     "image": "/17.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Non-Coffee", "Latte", "Vegan"]
+    "calories": "160 kcal",
+    "protein": "6 g",
+    "tags": ["Non-Coffee", "Latte", "Vegan"],
+    "allergens": ["Dairy (if not oat/almond milk)"]
   },
   {
     "id": 18,
@@ -193,9 +210,10 @@
     "description": "Add espresso shot",
     "price": 25,
     "image": "/18.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Add-On"]
+    "calories": "5 kcal",
+    "protein": "0 g",
+    "tags": ["Add-On"],
+    "allergens": ["None"]
   },
   {
     "id": 19,
@@ -204,9 +222,10 @@
     "description": "Add honey",
     "price": 25,
     "image": "/19.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Add-On"]
+    "calories": "60 kcal",
+    "protein": "0 g",
+    "tags": ["Add-On"],
+    "allergens": ["None"]
   },
   {
     "id": 20,
@@ -215,9 +234,10 @@
     "description": "Add oat milk",
     "price": 40,
     "image": "/20.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Add-On", "Vegan"]
+    "calories": "60 kcal",
+    "protein": "1 g",
+    "tags": ["Add-On", "Vegan"],
+    "allergens": ["Gluten (Oats)"]
   },
   {
     "id": 21,
@@ -226,9 +246,10 @@
     "description": "Add vanilla syrup",
     "price": 30,
     "image": "/21.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Add-On"]
+    "calories": "50 kcal",
+    "protein": "0 g",
+    "tags": ["Add-On"],
+    "allergens": ["None"]
   },
   {
     "id": 22,
@@ -237,9 +258,10 @@
     "description": "Add dark chocolate sauce",
     "price": 30,
     "image": "/22.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Add-On"]
+    "calories": "80 kcal",
+    "protein": "1 g",
+    "tags": ["Add-On"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 23,
@@ -248,9 +270,10 @@
     "description": "Add caramel sauce",
     "price": 30,
     "image": "/23.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Add-On"]
+    "calories": "70 kcal",
+    "protein": "0 g",
+    "tags": ["Add-On"],
+    "allergens": ["Dairy"]
   },
   {
     "id": 24,
@@ -259,9 +282,10 @@
     "description": "Grilled chicken, romaine, Caesar dressing, whole wheat wrap",
     "price": 250,
     "image": "/24.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Wrap"]
+    "calories": "480 kcal",
+    "protein": "36 g",
+    "tags": ["Wrap"],
+    "allergens": ["Dairy", "Gluten", "Egg"]
   },
   {
     "id": 25,
@@ -270,9 +294,10 @@
     "description": "Falafel, hummus, spinach, cucumber, tomato",
     "price": 260,
     "image": "/25.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Wrap", "Vegan"]
+    "calories": "420 kcal",
+    "protein": "14 g",
+    "tags": ["Wrap", "Vegan"],
+    "allergens": ["Gluten", "Sesame"]
   },
   {
     "id": 26,
@@ -281,9 +306,10 @@
     "description": "Roasted turkey, avocado, lettuce, tomato, whole wheat wrap",
     "price": 270,
     "image": "/26.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Wrap"]
+    "calories": "460 kcal",
+    "protein": "32 g",
+    "tags": ["Wrap"],
+    "allergens": ["Gluten"]
   },
   {
     "id": 27,
@@ -292,9 +318,10 @@
     "description": "Grilled veggies, feta, hummus, spinach, tomato",
     "price": 240,
     "image": "/27.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Wrap", "Vegetarian"]
+    "calories": "410 kcal",
+    "protein": "18 g",
+    "tags": ["Wrap", "Vegetarian"],
+    "allergens": ["Dairy", "Gluten", "Sesame"]
   },
   {
     "id": 28,
@@ -303,9 +330,10 @@
     "description": "Quinoa, cherry tomatoes, cucumber, avocado, vinaigrette",
     "price": 280,
     "image": "/28.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Salad", "Vegan"]
+    "calories": "360 kcal",
+    "protein": "12 g",
+    "tags": ["Salad", "Vegan"],
+    "allergens": ["None"]
   },
   {
     "id": 29,
@@ -314,9 +342,10 @@
     "description": "Grilled chicken, mixed greens, cherry tomatoes, balsamic dressing",
     "price": 300,
     "image": "/29.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Salad"]
+    "calories": "420 kcal",
+    "protein": "36 g",
+    "tags": ["Salad"],
+    "allergens": ["None"]
   },
   {
     "id": 30,
@@ -325,9 +354,10 @@
     "description": "Spinach, feta cheese, walnuts, cherry tomatoes, vinaigrette",
     "price": 270,
     "image": "/30.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Salad", "Vegetarian"]
+    "calories": "310 kcal",
+    "protein": "14 g",
+    "tags": ["Salad", "Vegetarian"],
+    "allergens": ["Dairy", "Tree Nuts (Walnuts)"]
   },
   {
     "id": 31,
@@ -336,9 +366,10 @@
     "description": "Grilled chicken with teriyaki sauce",
     "price": 250,
     "image": "/31.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Protein"]
+    "calories": "380 kcal",
+    "protein": "32 g",
+    "tags": ["Protein"],
+    "allergens": ["Soy", "Gluten"]
   },
   {
     "id": 32,
@@ -347,9 +378,10 @@
     "description": "Grilled salmon with lemon herb sauce",
     "price": 350,
     "image": "/32.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Protein"]
+    "calories": "420 kcal",
+    "protein": "34 g",
+    "tags": ["Protein"],
+    "allergens": ["Fish"]
   },
   {
     "id": 33,
@@ -358,9 +390,10 @@
     "description": "Pan-seared tofu with teriyaki glaze",
     "price": 220,
     "image": "/33.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Protein", "Vegan"]
+    "calories": "300 kcal",
+    "protein": "20 g",
+    "tags": ["Protein", "Vegan"],
+    "allergens": ["Soy", "Gluten"]
   },
   {
     "id": 34,
@@ -369,9 +402,10 @@
     "description": "Brown rice, grilled chicken, veggies, teriyaki sauce",
     "price": 300,
     "image": "/34.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Bowl", "High-Protein"]
+    "calories": "600 kcal",
+    "protein": "40 g",
+    "tags": ["Bowl", "High-Protein"],
+    "allergens": ["Soy", "Gluten"]
   },
   {
     "id": 35,
@@ -380,9 +414,10 @@
     "description": "Quinoa, chickpeas, avocado, veggies, tahini dressing",
     "price": 280,
     "image": "/35.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Bowl", "Vegan"]
+    "calories": "540 kcal",
+    "protein": "18 g",
+    "tags": ["Bowl", "Vegan"],
+    "allergens": ["Sesame"]
   },
   {
     "id": 36,
@@ -391,8 +426,9 @@
     "description": "Sushi rice, salmon, avocado, cucumber, sesame",
     "price": 350,
     "image": "/36.png",
-    "calories": null,
-    "protein": null,
-    "tags": ["Bowl"]
+    "calories": "580 kcal",
+    "protein": "32 g",
+    "tags": ["Bowl"],
+    "allergens": ["Fish", "Sesame"]
   }
 ]

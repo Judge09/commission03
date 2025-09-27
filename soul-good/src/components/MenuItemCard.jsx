@@ -50,7 +50,6 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
         transition="transform 150ms ease, box-shadow 150ms ease"
         _hover={{ transform: "translateY(-4px)", boxShadow: "lg" }}
       >
-        {/* Card Image + Price */}
         <Box position="relative">
           <Image
             src={item.image || imgFallback}
@@ -77,23 +76,18 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
           </Badge>
         </Box>
 
-        {/* Card Content */}
         <VStack align="start" spacing={3} p={5}>
           <HStack justify="space-between" w="100%">
             <Heading size="md" color={textColor}>
               {item.name}
             </Heading>
-            {item.badge && (
-              <Badge colorScheme={item.badge === "Vegan" ? "green" : "orange"}>
-                {item.badge}
-              </Badge>
-            )}
           </HStack>
 
           <Text color="gray.500" fontSize="sm" noOfLines={2}>
             {item.description || "—"}
           </Text>
 
+          {/* Tags */}
           {item.tags && item.tags.length > 0 && (
             <HStack spacing={2} wrap="wrap">
               {item.tags.map((t) => (
@@ -104,13 +98,23 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
             </HStack>
           )}
 
+          {/* Nutrition preview (just calories + protein quick peek) */}
+          <HStack justify="space-between" w="100%" pt={2}>
+            <Text fontSize="sm" color="gray.500">
+              {item.calories ? `${item.calories}` : "—"}
+            </Text>
+            <Text fontSize="sm" color="gray.500">
+              {item.protein ? `${item.protein} protein` : "— protein"}
+            </Text>
+          </HStack>
+
           <Text fontSize="xs" color="gray.400" mt={2}>
             Tap anywhere on the card for details
           </Text>
         </VStack>
       </Box>
 
-      {/* Modal */}
+      {/* Details Modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="lg" isCentered>
         <ModalOverlay />
         <ModalContent>
@@ -127,58 +131,64 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
               />
 
               <HStack justify="space-between">
-                {item.badge && (
-                  <Badge colorScheme={item.badge === "Vegan" ? "green" : "orange"}>
-                    {item.badge}
-                  </Badge>
-                )}
                 <Text fontWeight="bold" fontSize="lg">
                   ₱{item.price}
                 </Text>
               </HStack>
 
-              <Divider />
-
-              {/* Highlighted Description */}
-              <Box>
-                <Heading size="sm" mb={2}>
-                  Description
-                </Heading>
-                <Text color="gray.600" fontSize="md">
-                  {item.description || "No description available."}
-                </Text>
-              </Box>
+              <Text color="gray.600">
+                {item.description || "No description available."}
+              </Text>
 
               {/* Tags */}
               {item.tags && item.tags.length > 0 && (
-                <Box>
-                  <Heading size="sm" mb={2}>
-                    Tags
-                  </Heading>
-                  <HStack spacing={2} wrap="wrap">
-                    {item.tags.map((t) => (
-                      <Badge key={t} colorScheme="orange" variant="subtle">
-                        {t}
-                      </Badge>
-                    ))}
-                  </HStack>
-                </Box>
+                <HStack spacing={2} wrap="wrap">
+                  {item.tags.map((t) => (
+                    <Badge key={t} colorScheme="orange" variant="subtle">
+                      {t}
+                    </Badge>
+                  ))}
+                </HStack>
               )}
 
+              <Divider />
+
               {/* Nutrition */}
-              {(item.calories || item.protein) && (
+              <Box>
+                <Heading size="sm" mb={2}>
+                  Nutrition
+                </Heading>
+                <Stack spacing={1}>
+                  {item.nutrition
+                    ? Object.entries(item.nutrition).map(([key, value]) => (
+                        <Text key={key} fontSize="sm" color="gray.500">
+                          {`${key[0].toUpperCase() + key.slice(1)}: ${
+                            value || "—"
+                          }`}
+                        </Text>
+                      ))
+                    : (
+                      <>
+                        <Text fontSize="sm" color="gray.500">
+                          Calories: {item.calories || "—"}
+                        </Text>
+                        <Text fontSize="sm" color="gray.500">
+                          Protein: {item.protein || "—"}
+                        </Text>
+                      </>
+                    )}
+                </Stack>
+              </Box>
+
+              {/* Allergens */}
+              {item.allergens && item.allergens.length > 0 && (
                 <Box>
                   <Heading size="sm" mb={2}>
-                    Nutrition
+                    Allergens
                   </Heading>
-                  <HStack justify="space-between">
-                    <Text fontSize="sm" color="gray.500">
-                      {item.calories ? `${item.calories} cal` : ""}
-                    </Text>
-                    <Text fontSize="sm" color="gray.500">
-                      {item.protein ? `${item.protein}g protein` : ""}
-                    </Text>
-                  </HStack>
+                  <Text fontSize="sm" color="red.500">
+                    {item.allergens.join(", ")}
+                  </Text>
                 </Box>
               )}
             </Stack>
