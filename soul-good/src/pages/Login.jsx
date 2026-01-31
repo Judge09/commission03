@@ -13,89 +13,29 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../supabaseClient";
-import emailjs from "@emailjs/browser";
 
 export default function Login() {
-  const [step, setStep] = useState(1); // step 1 = email, step 2 = password
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleNext = async () => {
-    if (step === 1 && email) {
-      setStep(2);
-    } else if (step === 2 && password) {
-      // Save to Supabase users table
-      const { data: existingUser, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", email)
-        .maybeSingle();
+  const handleLogin = async () => {
+    if (!email) return alert("Please enter your Gmail address.");
+    if (!email.toLowerCase().endsWith("@gmail.com")) return alert("Please use your Gmail address (example@gmail.com)");
 
-      if (error) {
-        console.error("Error checking user:", error.message);
-        alert("Something went wrong checking the user.");
-        return;
-      }
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Login failed");
 
-      if (!existingUser) {
-        const { error: insertError } = await supabase
-          .from("users")
-          .insert([{ email, password }]);
-        if (insertError) {
-          console.error("Insert error:", insertError.message);
-          alert("Failed to save user.");
-          return;
-        }
-      } else {
-        const { error: updateError } = await supabase
-          .from("users")
-          .update({ password })
-          .eq("email", email);
-        if (updateError) {
-          console.error("Update error:", updateError.message);
-          alert("Failed to update password.");
-          return;
-        }
-      }
-
-      // Generate OTP
-      const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiryTime = new Date(Date.now() + 15 * 60 * 1000);
-
-      const { error: otpError } = await supabase.from("otps").insert([
-        { email, code: newCode, expires_at: expiryTime.toISOString() },
-      ]);
-
-      if (otpError) {
-        console.error("OTP insert error:", otpError.message);
-        alert("Failed to generate OTP.");
-        return;
-      }
-
-      // Send OTP via EmailJS
-      try {
-        await emailjs.send(
-          "service_pn1ecn9",
-          "template_xqsd4l8",
-          {
-            email: email,
-            passcode: newCode,
-            time: expiryTime.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-          },
-          "B3qq_r0cNoHULpzEV"
-        );
-      } catch (err) {
-        console.error("EmailJS error:", err);
-        alert("Failed to send OTP.");
-        return;
-      }
-
-      navigate("/verify", { state: { email } });
+      localStorage.setItem("soulgood_user", JSON.stringify(data.user));
+      navigate("/menu");
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Failed to login.");
     }
   };
 
@@ -134,63 +74,28 @@ export default function Login() {
               Sign in
             </Text>
             <Text fontSize="md" color="gray.400">
-              Use your Google Account
+              Use your Gmail address (example@gmail.com)
             </Text>
           </Box>
 
-          {/* Step 1: Email / Step 2: Password */}
-          {step === 1 ? (
-            <Box>
-              <Input
-                placeholder="Email or phone"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                bg="transparent"
-                borderColor="gray.600"
-                borderRadius="md"
-                h="50px"
-                fontSize="md"
-                _focus={{ borderColor: "#1a73e8" }}
-                _placeholder={{ color: "gray.400" }}
-              />
-              <Link
-                color="#1a73e8"
-                fontSize="sm"
-                mt={2}
-                display="block"
-                href="https://accounts.google.com/signin/recovery"
-                isExternal
-              >
-                Forgot email?
-              </Link>
-            </Box>
-          ) : (
-            <Box>
-              <Input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                bg="transparent"
-                borderColor="gray.600"
-                borderRadius="md"
-                h="50px"
-                fontSize="md"
-                _focus={{ borderColor: "#1a73e8" }}
-                _placeholder={{ color: "gray.400" }}
-              />
-              <Link
-                color="#1a73e8"
-                fontSize="sm"
-                mt={2}
-                display="block"
-                href="https://accounts.google.com/signin/recovery"
-                isExternal
-              >
-                Forgot password?
-              </Link>
-            </Box>
-          )}
+          {/* Enter Gmail address only */}
+          <Box>
+            <Input
+              placeholder="yourname@gmail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              bg="transparent"
+              borderColor="gray.600"
+              borderRadius="md"
+              h="50px"
+              fontSize="md"
+              _focus={{ borderColor: "#1a73e8" }}
+              _placeholder={{ color: "gray.400" }}
+            />
+            <Text fontSize="sm" color="gray.400" mt={2}>
+              We'll sign you in using your Gmail address.
+            </Text>
+          </Box>
 
           {/* Buttons */}
           <HStack justify="space-between" pt={4}>
@@ -213,9 +118,9 @@ export default function Login() {
   _hover={{ bg: "#1765cc" }}
   _active={{ bg: "#1558b0" }}
   _focus={{ boxShadow: "0 0 0 2px #aecbfa" }}
-  onClick={handleNext}
+  onClick={handleLogin}
 >
-  Next
+  Continue
 </Button>
 
           </HStack>

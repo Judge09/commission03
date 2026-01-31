@@ -19,9 +19,11 @@ import {
   ModalCloseButton,
   Button,
   Divider,
+  IconButton,
 } from "@chakra-ui/react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }) {
+export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", isFavorite = false, onToggleFavorite, onAddToCart }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.700", "gray.200");
@@ -75,6 +77,21 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
           >
             ₱{item.price}
           </Badge>
+
+          {/* Favorite button */}
+          <IconButton
+            aria-label="favorite"
+            icon={isFavorite ? <FaHeart color="#e53e3e" /> : <FaRegHeart />}
+            position="absolute"
+            top={3}
+            left={3}
+            size="sm"
+            bg="whiteAlpha.900"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onToggleFavorite) onToggleFavorite();
+            }}
+          />
         </Box>
 
         <VStack
@@ -174,6 +191,17 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
                 </Stack>
               </Box>
 
+              {item.ingredients && item.ingredients.length > 0 && (
+                <Box>
+                  <Heading size="sm" mb={2}>
+                    Ingredients
+                  </Heading>
+                  <Text fontSize="sm" color="gray.600">
+                    {item.ingredients.map((ing) => ing.toLowerCase()).join(", ")}
+                  </Text>
+                </Box>
+              )}
+
               {item.allergens && item.allergens.length > 0 && (
                 <Box>
                   <Heading size="sm" mb={2}>
@@ -188,7 +216,12 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg" }
           </ModalBody>
 
           <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose} mr={3}>
+              Close
+            </Button>
+            <Button colorScheme="orange" onClick={() => onAddToCart && onAddToCart()}>
+              Add to Cart
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

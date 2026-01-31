@@ -3,8 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import { useState, useEffect } from "react";
 import Welcome from "./pages/Welcome";
 import Login from "./pages/Login";
-import Verify from "./pages/Verify";
 import Menu from "./pages/Menu";
+import Cart from "./pages/Cart";
 
 const theme = extendTheme({
   colors: { brand: { 500: "#1a73e8" } },
@@ -44,8 +44,8 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/verify" element={<Verify />} />
             <Route path="/menu" element={<Menu />} />
+            <Route path="/cart" element={<Cart />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </PageWrapper>

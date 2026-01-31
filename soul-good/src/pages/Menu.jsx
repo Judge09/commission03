@@ -21,7 +21,9 @@ import {
   ModalBody,
   ModalCloseButton,
   Icon,
+  Select,
 } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import { FaInstagram, FaFacebook } from "react-icons/fa";
 import { GiKnifeFork, GiCoffeeCup, GiFrenchFries, GiHotMeal } from "react-icons/gi";
 import menuItemsData from "../data/menuItems.json";
@@ -84,6 +86,72 @@ export default function Menu() {
   }, [query, category]);
 
   const nextPromo = () => setActivePromo((prev) => (prev + 1) % promos.length);
+
+  // Simple session from localStorage
+  const user = JSON.parse(localStorage.getItem("soulgood_user") || "null");
+  const [favorites, setFavorites] = useState(new Set());
+
+  useEffect(() => {
+    if (user && user.id) {
+      fetch(`/api/favorites?userId=${user.id}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data?.favorites) {
+            const set = new Set(data.favorites.map((f) => f.item_id));
+            setFavorites(set);
+          }
+        })
+        .catch((err) => console.error(err));
+    }
+  }, []);
+
+  const toggleFavorite = async (itemId) => {
+    if (!user) return alert("Please log in to save favorites.");
+    const isFav = favorites.has(itemId);
+    try {
+      if (isFav) {
+        await fetch(`/api/favorites`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.id, itemId }),
+        });
+        const next = new Set(favorites);
+        next.delete(itemId);
+        setFavorites(next);
+      } else {
+        await fetch(`/api/favorites`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.id, itemId }),
+        });
+        setFavorites(new Set(favorites).add(itemId));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const addToCart = async (item) => {
+    if (!user) return alert("Please log in to add to cart.");
+    try {
+      await fetch("/api/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          itemId: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: 1,
+          image: item.image || null,
+        }),
+      });
+      alert(`${item.name} added to cart`);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to add to cart");
+    }
+  };
 
   const handleLogout = () => {
     onClose();
@@ -161,14 +229,22 @@ const randomIcons = useMemo(() => {
               Soul Good Cafe
             </Heading>
           </HStack>
-          <Button
-            colorScheme="orange"
-            variant="outline"
-            size="sm"
-            onClick={onOpen}
-          >
-            Logout
-          </Button>
+          <HStack spacing={3}>
+            <Button as={RouterLink} to="/cart" colorScheme="orange" variant="ghost" size="sm">
+              View Cart
+            </Button>
+            <Button
+              colorScheme="orange"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                localStorage.removeItem("soulgood_user");
+                onOpen();
+              }}
+            >
+              Logout
+            </Button>
+          </HStack>
         </HStack>
 
         {/* Logout Modal */}
@@ -239,18 +315,7 @@ const randomIcons = useMemo(() => {
                 <FaFacebook size={28} />
               </Link>
             </HStack>
-            <Button
-              as={Link}
-              href="https://soulgoodph.com/delivery"
-              isExternal
-              colorScheme="whiteAlpha"
-              size="md"
-              bg="white"
-              color="orange.600"
-              _hover={{ bg: "orange.100" }}
-            >
-              Order Delivery
-            </Button>
+            {/* Order Delivery removed as part of cleanup */}
           </Box>
 
           {/* Right side (promo carousel) */}
@@ -292,8 +357,28 @@ const randomIcons = useMemo(() => {
         {/* Menu section */}
         <Container maxW="container.lg" py={{ base: 4, md: 8 }}>
           <VStack spacing={6} align="stretch">
-            {/* Search */}
-            <Stack direction={{ base: "column", md: "row" }} align="center">
+            {/* Categories + Search inline (responsive) */}
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              align="center"
+              spacing={4}
+            >
+              <Box maxW={{ base: "100%", md: "320px" }} w={{ base: "100%", md: "auto" }}>
+                <Select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  bg="white"
+                  size="md"
+                  aria-label="Filter by category"
+                >
+                  {Object.entries(categories).map(([cat, count]) => (
+                    <option key={cat} value={cat}>
+                      {`${cat} (${count})`}
+                    </option>
+                  ))}
+                </Select>
+              </Box>
+
               <Box flex={1}>
                 <Input
                   placeholder="Search dishes, ingredients..."
@@ -305,55 +390,7 @@ const randomIcons = useMemo(() => {
               </Box>
             </Stack>
 
-            {/* Categories */}
-            <Box>
-              {/* Desktop */}
-              <HStack
-                spacing={3}
-                wrap="wrap"
-                display={{ base: "none", md: "flex" }}
-              >
-                {Object.entries(categories).map(([cat, count]) => (
-                  <Button
-                    key={cat}
-                    size="sm"
-                    variant={category === cat ? "solid" : "outline"}
-                    colorScheme="orange"
-                    onClick={() => setCategory(cat)}
-                    borderRadius="full"
-                    px={4}
-                  >
-                    <HStack spacing={2}>
-                      <Text>{cat}</Text>
-                      <Badge bg="orange.100" color="orange.700" px={2}>
-                        {count}
-                      </Badge>
-                    </HStack>
-                  </Button>
-                ))}
-              </HStack>
 
-              {/* Mobile */}
-              <Box display={{ base: "block", md: "none" }} mt={2}>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "0.5rem 1rem",
-                    borderRadius: "0.5rem",
-                    border: "1px solid #E2E8F0",
-                    fontSize: "1rem",
-                  }}
-                >
-                  {Object.entries(categories).map(([cat, count]) => (
-                    <option key={cat} value={cat}>
-                      {cat} ({count})
-                    </option>
-                  ))}
-                </select>
-              </Box>
-            </Box>
 
             {/* Menu grid */}
             <Box
@@ -370,6 +407,9 @@ const randomIcons = useMemo(() => {
                   key={item.id}
                   item={item}
                   imgFallback="/default-food.jpg"
+                  isFavorite={favorites.has(item.id)}
+                  onToggleFavorite={() => toggleFavorite(item.id)}
+                  onAddToCart={() => addToCart(item)}
                 />
               ))}
             </Box>

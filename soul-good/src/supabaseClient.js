@@ -1,6 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+// Supabase client intentionally removed — backend migrated to a local Express + SQLite server.
+// Frontend now communicates with the local server via REST endpoints at http://localhost:3001
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = null; // keep export to avoid breaking imports accidentally
