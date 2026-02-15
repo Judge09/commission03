@@ -3,432 +3,613 @@
     "id": 1,
     "name": "Give Me That Glow",
     "category": "Smoothies",
-    "description": "Blueberries, Banana, Chia",
+    "description": "blueberries, banana, chia",
     "price": 220,
     "image": "/1.png",
     "calories": "220 kcal",
     "protein": "5 g",
-    "tags": ["Smoothie", "Antioxidant"],
-    "allergens": ["None"]
+    "tags": [
+      "Smoothie",
+      "Antioxidant"
+    ],
+    "allergens": [
+      "None"
+    ]
   },
   {
     "id": 2,
     "name": "Dragon Fruit Youth Elixir",
     "category": "Smoothies",
-    "description": "Dragonfruit, Mango, Chia, Mint",
+    "description": "dragonfruit, mango, chia, mint",
     "price": 325,
     "image": "/2.png",
     "calories": "300 kcal",
     "protein": "4 g",
-    "tags": ["Smoothie", "Superfood"],
-    "allergens": ["None"]
+    "tags": [
+      "Smoothie",
+      "Superfood"
+    ],
+    "allergens": [
+      "None"
+    ]
   },
   {
     "id": 3,
     "name": "Gut Glow",
     "category": "Smoothies",
-    "description": "Yakult, Strawberry, Banana",
+    "description": "yakult, strawberry, banana",
     "price": 220,
     "image": "/3.png",
     "calories": "250 kcal",
     "protein": "6 g",
-    "tags": ["Smoothie", "Probiotic"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Smoothie",
+      "Probiotic"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 4,
     "name": "Café Americano",
     "category": "Soul Coffee",
-    "description": "Espresso with hot water",
+    "description": "espresso with hot water",
     "price": 140,
     "image": "/4.png",
     "calories": "10 kcal",
     "protein": "0 g",
-    "tags": ["Coffee", "Non-Sweet"],
-    "allergens": ["None"]
+    "tags": [
+      "Coffee",
+      "Non-Sweet"
+    ],
+    "allergens": [
+      "None"
+    ]
   },
   {
     "id": 5,
     "name": "Artistic Café Latte",
     "category": "Soul Coffee",
-    "description": "Espresso with steamed milk",
+    "description": "espresso with steamed milk",
     "price": 160,
     "image": "/5.png",
     "calories": "120 kcal",
     "protein": "6 g",
-    "tags": ["Coffee", "Latte"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Coffee",
+      "Latte"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 6,
     "name": "Bulletproof Coffee",
     "category": "Soul Coffee",
-    "description": "Coffee with butter and MCT oil",
+    "description": "coffee with butter and mct oil",
     "price": 180,
     "image": "/6.png",
     "calories": "230 kcal",
     "protein": "1 g",
-    "tags": ["Coffee", "High-Fat"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Coffee",
+      "High-Fat"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 7,
     "name": "Caramel Latte",
     "category": "Soul Coffee",
-    "description": "Espresso with steamed milk and caramel syrup",
+    "description": "espresso with steamed milk and caramel syrup",
     "price": 170,
     "image": "/7.png",
     "calories": "180 kcal",
     "protein": "6 g",
-    "tags": ["Coffee", "Latte"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Coffee",
+      "Latte"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 8,
     "name": "Honey Cinnamon Oat Latte",
     "category": "Soul Coffee",
-    "description": "Espresso with oat milk, honey, and cinnamon",
+    "description": "espresso with oat milk, honey, and cinnamon",
     "price": 170,
     "image": "/8.png",
     "calories": "160 kcal",
     "protein": "3 g",
-    "tags": ["Coffee", "Latte", "Oat Milk"],
-    "allergens": ["Gluten (Oats)"]
+    "tags": [
+      "Coffee",
+      "Latte",
+      "Oat Milk"
+    ],
+    "allergens": [
+      "Gluten (Oats)"
+    ]
   },
   {
     "id": 9,
     "name": "Coconut Agave Latte",
     "category": "Soul Coffee",
-    "description": "Espresso with steamed milk, coconut, and agave",
+    "description": "espresso with steamed milk, coconut, and agave",
     "price": 170,
     "image": "/9.png",
     "calories": "150 kcal",
     "protein": "2 g",
-    "tags": ["Coffee", "Latte", "Vegan"],
-    "allergens": ["Tree Nuts (Coconut)"]
+    "tags": [
+      "Coffee",
+      "Latte",
+      "Vegan"
+    ],
+    "allergens": [
+      "Tree Nuts (Coconut)"
+    ]
   },
   {
     "id": 10,
     "name": "Feelgood Cappuccino",
     "category": "Soul Coffee",
-    "description": "Espresso with steamed milk foam",
+    "description": "espresso with steamed milk foam",
     "price": 170,
     "image": "/10.png",
     "calories": "130 kcal",
     "protein": "6 g",
-    "tags": ["Coffee", "Cappuccino"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Coffee",
+      "Cappuccino"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 11,
     "name": "Spanish Sun Latte",
     "category": "Soul Coffee",
-    "description": "Espresso with milk and Spanish-style sweetness",
+    "description": "espresso with milk and spanish-style sweetness",
     "price": 170,
     "image": "/11.png",
     "calories": "170 kcal",
     "protein": "6 g",
-    "tags": ["Coffee", "Latte"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Coffee",
+      "Latte"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 12,
     "name": "Honey Sunrise with Milk Foam",
     "category": "Soul Coffee",
-    "description": "Espresso with honey and milk foam",
+    "description": "espresso with honey and milk foam",
     "price": 160,
     "image": "/12.png",
     "calories": "150 kcal",
     "protein": "5 g",
-    "tags": ["Coffee", "Latte"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Coffee",
+      "Latte"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 13,
     "name": "Dirty Matcha",
     "category": "Soul Coffee",
-    "description": "Matcha latte with a shot of espresso",
+    "description": "matcha latte with a shot of espresso",
     "price": 180,
     "image": "/13.png",
     "calories": "170 kcal",
     "protein": "5 g",
-    "tags": ["Coffee", "Matcha"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Coffee",
+      "Matcha"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 14,
     "name": "Espresso Shot",
     "category": "Soul Coffee",
-    "description": "Single shot of espresso",
+    "description": "single shot of espresso",
     "price": 100,
     "image": "/14.png",
     "calories": "5 kcal",
     "protein": "0 g",
-    "tags": ["Coffee", "Espresso"],
-    "allergens": ["None"]
+    "tags": [
+      "Coffee",
+      "Espresso"
+    ],
+    "allergens": [
+      "None"
+    ]
   },
   {
     "id": 15,
     "name": "Chocolate Zen",
     "category": "Non-Coffee Drinks",
-    "description": "Rich chocolate latte",
+    "description": "rich chocolate latte",
     "price": 160,
     "image": "/15.png",
     "calories": "210 kcal",
     "protein": "6 g",
-    "tags": ["Non-Coffee"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Non-Coffee"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 16,
     "name": "Matcha Bliss Latte",
     "category": "Non-Coffee Drinks",
-    "description": "Matcha with steamed milk",
+    "description": "matcha with steamed milk",
     "price": 160,
     "image": "/16.png",
     "calories": "140 kcal",
     "protein": "6 g",
-    "tags": ["Non-Coffee", "Matcha"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Non-Coffee",
+      "Matcha"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 17,
     "name": "Golden Turmeric Latte",
     "category": "Non-Coffee Drinks",
-    "description": "Turmeric, spices, and milk",
+    "description": "turmeric, spices, and milk",
     "price": 180,
     "image": "/17.png",
     "calories": "160 kcal",
     "protein": "6 g",
-    "tags": ["Non-Coffee", "Latte", "Vegan"],
-    "allergens": ["Dairy (if not oat/almond milk)"]
+    "tags": [
+      "Non-Coffee",
+      "Latte",
+      "Vegan"
+    ],
+    "allergens": [
+      "Dairy (if not oat/almond milk)"
+    ]
   },
   {
     "id": 18,
     "name": "Espresso Shot Add-On",
     "category": "Add-Ons",
-    "description": "Add espresso shot",
+    "description": "add espresso shot",
     "price": 25,
     "image": "/18.png",
     "calories": "5 kcal",
     "protein": "0 g",
-    "tags": ["Add-On"],
-    "allergens": ["None"]
+    "tags": [
+      "Add-On"
+    ],
+    "allergens": [
+      "None"
+    ]
   },
   {
     "id": 19,
     "name": "Honey Add-On",
     "category": "Add-Ons",
-    "description": "Add honey",
+    "description": "add honey",
     "price": 25,
     "image": "/19.png",
     "calories": "60 kcal",
     "protein": "0 g",
-    "tags": ["Add-On"],
-    "allergens": ["None"]
+    "tags": [
+      "Add-On"
+    ],
+    "allergens": [
+      "None"
+    ]
   },
   {
     "id": 20,
     "name": "Oat Milk Add-On",
     "category": "Add-Ons",
-    "description": "Add oat milk",
+    "description": "add oat milk",
     "price": 40,
     "image": "/20.png",
     "calories": "60 kcal",
     "protein": "1 g",
-    "tags": ["Add-On", "Vegan"],
-    "allergens": ["Gluten (Oats)"]
+    "tags": [
+      "Add-On",
+      "Vegan"
+    ],
+    "allergens": [
+      "Gluten (Oats)"
+    ]
   },
   {
     "id": 21,
     "name": "Vanilla Syrup Add-On",
     "category": "Add-Ons",
-    "description": "Add vanilla syrup",
+    "description": "add vanilla syrup",
     "price": 30,
     "image": "/21.png",
     "calories": "50 kcal",
     "protein": "0 g",
-    "tags": ["Add-On"],
-    "allergens": ["None"]
+    "tags": [
+      "Add-On"
+    ],
+    "allergens": [
+      "None"
+    ]
   },
   {
     "id": 22,
     "name": "Dark Chocolate Sauce Add-On",
     "category": "Add-Ons",
-    "description": "Add dark chocolate sauce",
+    "description": "add dark chocolate sauce",
     "price": 30,
     "image": "/22.png",
     "calories": "80 kcal",
     "protein": "1 g",
-    "tags": ["Add-On"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Add-On"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 23,
     "name": "Caramel Sauce Add-On",
     "category": "Add-Ons",
-    "description": "Add caramel sauce",
+    "description": "add caramel sauce",
     "price": 30,
     "image": "/23.png",
     "calories": "70 kcal",
     "protein": "0 g",
-    "tags": ["Add-On"],
-    "allergens": ["Dairy"]
+    "tags": [
+      "Add-On"
+    ],
+    "allergens": [
+      "Dairy"
+    ]
   },
   {
     "id": 24,
     "name": "Chicken Caesar Wrap",
     "category": "Wraps",
-    "description": "Grilled chicken, romaine, Caesar dressing, whole wheat wrap",
+    "description": "grilled chicken, romaine, caesar dressing, whole wheat wrap",
     "price": 250,
     "image": "/24.png",
     "calories": "480 kcal",
     "protein": "36 g",
-    "tags": ["Wrap"],
-    "allergens": ["Dairy", "Gluten", "Egg"]
+    "tags": [
+      "Wrap"
+    ],
+    "allergens": [
+      "Dairy",
+      "Gluten",
+      "Egg"
+    ]
   },
   {
     "id": 25,
     "name": "Vegan Power Wrap",
     "category": "Wraps",
-    "description": "Falafel, hummus, spinach, cucumber, tomato",
+    "description": "falafel, hummus, spinach, cucumber, tomato",
     "price": 260,
     "image": "/25.png",
     "calories": "420 kcal",
     "protein": "14 g",
-    "tags": ["Wrap", "Vegan"],
-    "allergens": ["Gluten", "Sesame"]
+    "tags": [
+      "Wrap",
+      "Vegan"
+    ],
+    "allergens": [
+      "Gluten",
+      "Sesame"
+    ]
   },
   {
     "id": 26,
     "name": "Turkey & Avocado Wrap",
     "category": "Wraps",
-    "description": "Roasted turkey, avocado, lettuce, tomato, whole wheat wrap",
+    "description": "roasted turkey, avocado, lettuce, tomato, whole wheat wrap",
     "price": 270,
     "image": "/26.png",
     "calories": "460 kcal",
     "protein": "32 g",
-    "tags": ["Wrap"],
-    "allergens": ["Gluten"]
+    "tags": [
+      "Wrap"
+    ],
+    "allergens": [
+      "Gluten"
+    ]
   },
   {
     "id": 27,
     "name": "Mediterranean Veggie Wrap",
     "category": "Wraps",
-    "description": "Grilled veggies, feta, hummus, spinach, tomato",
+    "description": "grilled veggies, feta, hummus, spinach, tomato",
     "price": 240,
     "image": "/27.png",
     "calories": "410 kcal",
     "protein": "18 g",
-    "tags": ["Wrap", "Vegetarian"],
-    "allergens": ["Dairy", "Gluten", "Sesame"]
+    "tags": [
+      "Wrap",
+      "Vegetarian"
+    ],
+    "allergens": [
+      "Dairy",
+      "Gluten",
+      "Sesame"
+    ]
   },
   {
     "id": 28,
     "name": "Quinoa Super Salad",
     "category": "Salads",
-    "description": "Quinoa, cherry tomatoes, cucumber, avocado, vinaigrette",
+    "description": "quinoa, cherry tomatoes, cucumber, avocado, vinaigrette",
     "price": 280,
     "image": "/28.png",
     "calories": "360 kcal",
     "protein": "12 g",
-    "tags": ["Salad", "Vegan"],
-    "allergens": ["None"]
+    "tags": [
+      "Salad",
+      "Vegan"
+    ],
+    "allergens": [
+      "None"
+    ]
   },
   {
     "id": 29,
     "name": "Grilled Chicken Salad",
     "category": "Salads",
-    "description": "Grilled chicken, mixed greens, cherry tomatoes, balsamic dressing",
+    "description": "grilled chicken, mixed greens, cherry tomatoes, balsamic dressing",
     "price": 300,
     "image": "/29.png",
     "calories": "420 kcal",
     "protein": "36 g",
-    "tags": ["Salad"],
-    "allergens": ["None"]
+    "tags": [
+      "Salad"
+    ],
+    "allergens": [
+      "None"
+    ]
   },
   {
     "id": 30,
     "name": "Spinach & Feta Salad",
     "category": "Salads",
-    "description": "Spinach, feta cheese, walnuts, cherry tomatoes, vinaigrette",
+    "description": "spinach, feta cheese, walnuts, cherry tomatoes, vinaigrette",
     "price": 270,
     "image": "/30.png",
     "calories": "310 kcal",
     "protein": "14 g",
-    "tags": ["Salad", "Vegetarian"],
-    "allergens": ["Dairy", "Tree Nuts (Walnuts)"]
+    "tags": [
+      "Salad",
+      "Vegetarian"
+    ],
+    "allergens": [
+      "Dairy",
+      "Tree Nuts (Walnuts)"
+    ]
   },
   {
     "id": 31,
     "name": "Teriyaki Chicken",
     "category": "Proteins",
-    "description": "Grilled chicken with teriyaki sauce",
+    "description": "grilled chicken with teriyaki sauce",
     "price": 250,
     "image": "/31.png",
     "calories": "380 kcal",
     "protein": "32 g",
-    "tags": ["Protein"],
-    "allergens": ["Soy", "Gluten"]
+    "tags": [
+      "Protein"
+    ],
+    "allergens": [
+      "Soy",
+      "Gluten"
+    ]
   },
   {
     "id": 32,
     "name": "Grilled Salmon",
     "category": "Proteins",
-    "description": "Grilled salmon with lemon herb sauce",
+    "description": "grilled salmon with lemon herb sauce",
     "price": 350,
     "image": "/32.png",
     "calories": "420 kcal",
     "protein": "34 g",
-    "tags": ["Protein"],
-    "allergens": ["Fish"]
+    "tags": [
+      "Protein"
+    ],
+    "allergens": [
+      "Fish"
+    ]
   },
   {
     "id": 33,
     "name": "Tofu Steak",
     "category": "Proteins",
-    "description": "Pan-seared tofu with teriyaki glaze",
+    "description": "pan-seared tofu with teriyaki glaze",
     "price": 220,
     "image": "/33.png",
     "calories": "300 kcal",
     "protein": "20 g",
-    "tags": ["Protein", "Vegan"],
-    "allergens": ["Soy", "Gluten"]
+    "tags": [
+      "Protein",
+      "Vegan"
+    ],
+    "allergens": [
+      "Soy",
+      "Gluten"
+    ]
   },
   {
     "id": 34,
     "name": "Protein Bowl",
     "category": "Bowls",
-    "description": "Brown rice, grilled chicken, veggies, teriyaki sauce",
+    "description": "brown rice, grilled chicken, veggies, teriyaki sauce",
     "price": 300,
     "image": "/34.png",
     "calories": "600 kcal",
     "protein": "40 g",
-    "tags": ["Bowl", "High-Protein"],
-    "allergens": ["Soy", "Gluten"]
+    "tags": [
+      "Bowl",
+      "High-Protein"
+    ],
+    "allergens": [
+      "Soy",
+      "Gluten"
+    ]
   },
   {
     "id": 35,
     "name": "Vegan Buddha Bowl",
     "category": "Bowls",
-    "description": "Quinoa, chickpeas, avocado, veggies, tahini dressing",
+    "description": "quinoa, chickpeas, avocado, veggies, tahini dressing",
     "price": 280,
     "image": "/35.png",
     "calories": "540 kcal",
     "protein": "18 g",
-    "tags": ["Bowl", "Vegan"],
-    "allergens": ["Sesame"]
+    "tags": [
+      "Bowl",
+      "Vegan"
+    ],
+    "allergens": [
+      "Sesame"
+    ]
   },
   {
     "id": 36,
     "name": "Salmon Poke Bowl",
     "category": "Bowls",
-    "description": "Sushi rice, salmon, avocado, cucumber, sesame",
+    "description": "sushi rice, salmon, avocado, cucumber, sesame",
     "price": 350,
     "image": "/36.png",
     "calories": "580 kcal",
     "protein": "32 g",
-    "tags": ["Bowl"],
-    "allergens": ["Fish", "Sesame"]
+    "tags": [
+      "Bowl"
+    ],
+    "allergens": [
+      "Fish",
+      "Sesame"
+    ]
   }
 ]

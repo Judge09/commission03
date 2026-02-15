@@ -11,12 +11,23 @@ import {
   Select,
   Stack,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login, isAuthenticated } = useAuth();
+
+  // Redirect to intended destination if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || "/menu";
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
 
   const handleLogin = async () => {
     if (!email) return alert("Please enter your Gmail address.");
@@ -31,8 +42,17 @@ export default function Login() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Login failed");
 
-      localStorage.setItem("soulgood_user", JSON.stringify(data.user));
-      navigate("/menu");
+      // Note: Backend should return accessToken and refreshToken
+      // For now, we'll use the user data as a temporary token until backend is updated
+      const accessToken = data.accessToken || `temp_token_${data.user.id}`;
+      const refreshToken = data.refreshToken || `temp_refresh_${data.user.id}`;
+
+      // Use the auth context login method
+      login(accessToken, refreshToken, data.user);
+
+      // Navigate to intended destination or menu
+      const from = location.state?.from?.pathname || "/menu";
+      navigate(from, { replace: true });
     } catch (err) {
       console.error(err);
       alert(err.message || "Failed to login.");

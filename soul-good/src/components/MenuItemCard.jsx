@@ -23,10 +23,13 @@ import {
 } from "@chakra-ui/react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", isFavorite = false, onToggleFavorite, onAddToCart }) {
+export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", isFavorite = false, quantity = 0, onToggleFavorite, onAddToCart }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.700", "gray.200");
+
+  // Design spec: Highlight card if favorited AND has quantity > 0
+  const isActive = isFavorite && quantity > 0;
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -37,20 +40,20 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
 
   return (
     <>
-      {/* Default Card (unchanged) */}
+      {/* Default Card - with active state styling */}
       <Box
-        bg={bg}
+        bg={isActive ? "orange.100" : isFavorite ? "orange.50" : bg}
         rounded="2xl"
-        shadow="md"
+        shadow={isActive ? "lg" : "md"}
         overflow="hidden"
-        borderWidth="1px"
-        borderColor="rgba(0,0,0,0.05)"
+        borderWidth="2px"
+        borderColor={isActive ? "orange.400" : isFavorite ? "orange.300" : "rgba(0,0,0,0.05)"}
         cursor="pointer"
         role="button"
         tabIndex={0}
         onClick={onOpen}
         onKeyDown={handleKeyDown}
-        transition="transform 150ms ease, box-shadow 150ms ease"
+        transition="transform 150ms ease, box-shadow 150ms ease, background-color 200ms ease, border-color 200ms ease"
         _hover={{ transform: "translateY(-4px)", boxShadow: "lg" }}
       >
         <Box position="relative">
@@ -74,6 +77,7 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
             borderRadius="full"
             fontWeight="semibold"
             boxShadow="sm"
+            fontFamily="var(--font-the-seasons)"
           >
             ₱{item.price}
           </Badge>
@@ -100,7 +104,7 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
           p={4}
           minH={{ base: "100px", md: "auto" }}
         >
-          <Heading size="sm" color={textColor} noOfLines={1}>
+          <Heading size="sm" color={textColor} noOfLines={1} fontFamily="var(--font-the-seasons)">
             {item.name}
           </Heading>
 
@@ -144,7 +148,7 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
               />
 
               <HStack justify="space-between">
-                <Text fontWeight="bold" fontSize="lg">
+                <Text fontWeight="bold" fontSize="lg" fontFamily="var(--font-the-seasons)">
                   ₱{item.price}
                 </Text>
               </HStack>
@@ -166,7 +170,7 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
               <Divider />
 
               <Box>
-                <Heading size="sm" mb={2}>
+                <Heading size="sm" mb={2} fontFamily="var(--font-sachez)">
                   Nutrition
                 </Heading>
                 <Stack spacing={1}>

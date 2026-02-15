@@ -23,7 +23,9 @@ import {
   Icon,
   Select,
 } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
 import { FaInstagram, FaFacebook } from "react-icons/fa";
 import { GiKnifeFork, GiCoffeeCup, GiFrenchFries, GiHotMeal } from "react-icons/gi";
 import menuItemsData from "../data/menuItems.json";
@@ -54,6 +56,18 @@ export default function Menu() {
   const [category, setCategory] = useState("All");
   const [activePromo, setActivePromo] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isQuantityOpen, onOpen: onQuantityOpen, onClose: onQuantityClose } = useDisclosure();
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
+  const { user: authUser, logout: authLogout } = useAuth();
+  const {
+    isFavorite,
+    toggleFavorite,
+    addToCart,
+    cartItemCount,
+    getItemQuantity
+  } = useCart();
 
   // Auto-rotate promos
   useEffect(() => {
@@ -87,75 +101,44 @@ export default function Menu() {
 
   const nextPromo = () => setActivePromo((prev) => (prev + 1) % promos.length);
 
-  // Simple session from localStorage
-  const user = JSON.parse(localStorage.getItem("soulgood_user") || "null");
-  const [favorites, setFavorites] = useState(new Set());
+  // Get user from auth context
+  const user = authUser;
 
-  useEffect(() => {
-    if (user && user.id) {
-      fetch(`/api/favorites?userId=${user.id}`)
-        .then((r) => r.json())
-        .then((data) => {
-          if (data?.favorites) {
-            const set = new Set(data.favorites.map((f) => f.item_id));
-            setFavorites(set);
-          }
-        })
-        .catch((err) => console.error(err));
-    }
-  }, []);
+  // Cart and favorites are now managed by CartContext
 
-  const toggleFavorite = async (itemId) => {
+  const handleToggleFavorite = (item) => {
     if (!user) return alert("Please log in to save favorites.");
-    const isFav = favorites.has(itemId);
-    try {
-      if (isFav) {
-        await fetch(`/api/favorites`, {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: user.id, itemId }),
-        });
-        const next = new Set(favorites);
-        next.delete(itemId);
-        setFavorites(next);
-      } else {
-        await fetch(`/api/favorites`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: user.id, itemId }),
-        });
-        setFavorites(new Set(favorites).add(itemId));
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    toggleFavorite(item);
   };
 
-  const addToCart = async (item) => {
+  const handleAddToCart = (item) => {
     if (!user) return alert("Please log in to add to cart.");
+    setSelectedItem(item);
+    setQuantity(1);
+    onQuantityOpen();
+  };
+
+  const confirmAddToCart = async () => {
     try {
-      await fetch("/api/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user.id,
-          itemId: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: 1,
-          image: item.image || null,
-        }),
-      });
-      alert(`${item.name} added to cart`);
+      await addToCart(selectedItem, quantity);
+      onQuantityClose();
+      setSelectedItem(null);
+      setQuantity(1);
     } catch (err) {
       console.error(err);
       alert("Failed to add to cart");
     }
   };
 
-  const handleLogout = () => {
-    onClose();
-    window.location.href = "/welcome";
+  const handleLogout = async () => {
+    try {
+      await authLogout();
+      onClose();
+      navigate("/welcome", { replace: true });
+    } catch (err) {
+      console.error("Logout failed:", err);
+      alert("Failed to logout. Please try again.");
+    }
   };
 
 // Background floating icons
@@ -178,7 +161,7 @@ const randomIcons = useMemo(() => {
 
 
   return (
-    <Box minH="100vh" position="relative" overflow="hidden" bg="orange.50">
+    <Box minH="100vh" position="relative" bg="orange.50">
       {/* Background icons */}
       <Box
         position="absolute"
@@ -225,22 +208,39 @@ const randomIcons = useMemo(() => {
         >
           <HStack spacing={3}>
             <Image src={Logo} alt="Soul Good Logo" boxSize="40px" />
-            <Heading fontSize="lg" color="orange.600">
+            <Heading fontSize="lg" color="orange.600" fontFamily="var(--font-recoleta)">
               Soul Good Cafe
             </Heading>
           </HStack>
           <HStack spacing={3}>
-            <Button as={RouterLink} to="/cart" colorScheme="orange" variant="ghost" size="sm">
+            <Button
+              as={RouterLink}
+              to="/cart"
+              colorScheme="orange"
+              variant="ghost"
+              size="sm"
+              position="relative"
+            >
               View Cart
+              {cartItemCount > 0 && (
+                <Badge
+                  position="absolute"
+                  top="-5px"
+                  right="-5px"
+                  colorScheme="red"
+                  borderRadius="full"
+                  fontSize="0.7em"
+                  px={2}
+                >
+                  {cartItemCount}
+                </Badge>
+              )}
             </Button>
             <Button
               colorScheme="orange"
               variant="outline"
               size="sm"
-              onClick={() => {
-                localStorage.removeItem("soulgood_user");
-                onOpen();
-              }}
+              onClick={onOpen}
             >
               Logout
             </Button>
@@ -260,6 +260,51 @@ const randomIcons = useMemo(() => {
               </Button>
               <Button colorScheme="orange" ml={3} onClick={handleLogout}>
                 Logout
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {/* Quantity Adjustment Modal */}
+        <Modal isOpen={isQuantityOpen} onClose={onQuantityClose} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader fontFamily="var(--font-the-seasons)">
+              {selectedItem?.name}
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <VStack spacing={4}>
+                <Text>Select quantity to add to cart:</Text>
+                <HStack spacing={4}>
+                  <Button
+                    colorScheme="orange"
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    isDisabled={quantity <= 1}
+                  >
+                    -
+                  </Button>
+                  <Text fontSize="2xl" fontWeight="bold" minW="50px" textAlign="center">
+                    {quantity}
+                  </Text>
+                  <Button
+                    colorScheme="orange"
+                    onClick={() => setQuantity((q) => q + 1)}
+                  >
+                    +
+                  </Button>
+                </HStack>
+                <Text fontSize="lg" fontFamily="var(--font-the-seasons)" fontWeight="bold">
+                  Total: ₱{selectedItem ? (selectedItem.price * quantity).toFixed(2) : '0.00'}
+                </Text>
+              </VStack>
+            </ModalBody>
+            <ModalFooter>
+              <Button variant="ghost" onClick={onQuantityClose} mr={3}>
+                Cancel
+              </Button>
+              <Button colorScheme="orange" onClick={confirmAddToCart}>
+                Add to Cart
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -290,6 +335,7 @@ const randomIcons = useMemo(() => {
               fontSize={{ base: "2xl", md: "4xl" }}
               mb={2}
               textAlign={{ base: "center", md: "left" }}
+              fontFamily="var(--font-recoleta)"
             >
               Soul Good Cafe
             </Heading>
@@ -346,7 +392,7 @@ const randomIcons = useMemo(() => {
 
         {/* Online Menu heading */}
         <Box textAlign="center" mt={12} mb={6}>
-          <Heading fontSize={{ base: "3xl", md: "5xl" }} color="orange.600">
+          <Heading fontSize={{ base: "3xl", md: "5xl" }} color="orange.600" fontFamily="var(--font-allrounder)">
             ONLINE MENU
           </Heading>
           <Text fontSize={{ base: "sm", md: "md" }} color="gray.600" mt={2}>
@@ -357,11 +403,33 @@ const randomIcons = useMemo(() => {
         {/* Menu section */}
         <Container maxW="container.lg" py={{ base: 4, md: 8 }}>
           <VStack spacing={6} align="stretch">
-            {/* Categories + Search inline (responsive) */}
+            {/* Categories + Search inline (responsive) - STICKY HEADER */}
             <Stack
               direction={{ base: "column", md: "row" }}
               align="center"
               spacing={4}
+              position="sticky"
+              top={{ base: "-1px", md: 0 }}
+              bg="orange.50"
+              zIndex={100}
+              py={4}
+              px={{ base: 4, md: 0 }}
+              mx={{ base: -4, md: 0 }}
+              boxShadow="sm"
+              backdropFilter="blur(10px)"
+              borderBottom="1px solid"
+              borderColor="orange.200"
+              _before={{
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                bg: "orange.50",
+                opacity: 0.95,
+                zIndex: -1,
+              }}
             >
               <Box maxW={{ base: "100%", md: "320px" }} w={{ base: "100%", md: "auto" }}>
                 <Select
@@ -370,6 +438,7 @@ const randomIcons = useMemo(() => {
                   bg="white"
                   size="md"
                   aria-label="Filter by category"
+                  fontFamily="var(--font-lora)"
                 >
                   {Object.entries(categories).map(([cat, count]) => (
                     <option key={cat} value={cat}>
@@ -386,6 +455,7 @@ const randomIcons = useMemo(() => {
                   onChange={(e) => setQuery(e.target.value)}
                   bg="white"
                   borderRadius="md"
+                  fontFamily="var(--font-lora)"
                 />
               </Box>
             </Stack>
@@ -407,9 +477,10 @@ const randomIcons = useMemo(() => {
                   key={item.id}
                   item={item}
                   imgFallback="/default-food.jpg"
-                  isFavorite={favorites.has(item.id)}
-                  onToggleFavorite={() => toggleFavorite(item.id)}
-                  onAddToCart={() => addToCart(item)}
+                  isFavorite={isFavorite(item.id)}
+                  quantity={getItemQuantity(item.id)}
+                  onToggleFavorite={() => handleToggleFavorite(item)}
+                  onAddToCart={() => handleAddToCart(item)}
                 />
               ))}
             </Box>
