@@ -1,38 +1,17 @@
 /**
- * API Client with automatic token refresh interceptor
- * Handles 401 errors and silently refreshes access tokens
+ * API Client
+ * Fetch wrapper that attaches the session token as a Bearer header
  */
 
-import { getAccessToken, refreshAccessToken, clearAuthTokens } from './auth';
-
-let isRefreshing = false;
-let failedQueue = [];
+import { getAccessToken } from './auth';
 
 /**
- * Process queued requests after token refresh
- * @param {Error|null} error - Error if refresh failed
- * @param {string|null} token - New access token if refresh succeeded
- */
-const processQueue = (error, token = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
-  });
-
-  failedQueue = [];
-};
-
-/**
- * Enhanced fetch with automatic token refresh on 401 errors
+ * Fetch with session token attached
  * @param {string} url - API endpoint URL
  * @param {object} options - Fetch options
  * @returns {Promise<Response>} Fetch response
  */
 export const apiFetch = async (url, options = {}) => {
-  // Prepare headers with access token
   const token = getAccessToken();
   const headers = {
     'Content-Type': 'application/json',
@@ -43,75 +22,7 @@ export const apiFetch = async (url, options = {}) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // Make the initial request
-  let response = await fetch(url, {
-    ...options,
-    headers,
-  });
-
-  // If 401 Unauthorized, attempt token refresh
-  if (response.status === 401 && !url.includes('/api/auth/refresh')) {
-    if (isRefreshing) {
-      // Another request is already refreshing the token
-      // Queue this request and wait for the new token
-      return new Promise((resolve, reject) => {
-        failedQueue.push({
-          resolve: async (newToken) => {
-            try {
-              const retryHeaders = {
-                ...headers,
-                Authorization: `Bearer ${newToken}`,
-              };
-              const retryResponse = await fetch(url, {
-                ...options,
-                headers: retryHeaders,
-              });
-              resolve(retryResponse);
-            } catch (err) {
-              reject(err);
-            }
-          },
-          reject,
-        });
-      });
-    }
-
-    isRefreshing = true;
-
-    try {
-      // Attempt to refresh the token
-      const newToken = await refreshAccessToken();
-      isRefreshing = false;
-      processQueue(null, newToken);
-
-      // Retry the original request with the new token
-      const retryHeaders = {
-        ...headers,
-        Authorization: `Bearer ${newToken}`,
-      };
-      response = await fetch(url, {
-        ...options,
-        headers: retryHeaders,
-      });
-
-      return response;
-    } catch (err) {
-      isRefreshing = false;
-      processQueue(err, null);
-
-      // Token refresh failed - clear tokens and redirect to login
-      clearAuthTokens();
-
-      // Redirect to login
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
-
-      throw err;
-    }
-  }
-
-  return response;
+  return fetch(url, { ...options, headers });
 };
 
 /**

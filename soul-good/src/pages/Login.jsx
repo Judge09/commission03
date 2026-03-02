@@ -17,6 +17,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isAuthenticated } = useAuth();
@@ -32,12 +33,13 @@ export default function Login() {
   const handleLogin = async () => {
     if (!email) return alert("Please enter your Gmail address.");
     if (!email.toLowerCase().endsWith("@gmail.com")) return alert("Please use your Gmail address (example@gmail.com)");
+    if (!password) return alert("Please enter your password.");
 
     try {
       const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Login failed");
@@ -98,12 +100,26 @@ export default function Login() {
             </Text>
           </Box>
 
-          {/* Enter Gmail address only */}
+          {/* Email and password fields */}
           <Box>
             <Input
               placeholder="yourname@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              bg="transparent"
+              borderColor="gray.600"
+              borderRadius="md"
+              h="50px"
+              fontSize="md"
+              _focus={{ borderColor: "#1a73e8" }}
+              _placeholder={{ color: "gray.400" }}
+              mb={3}
+            />
+            <Input
+              placeholder="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               bg="transparent"
               borderColor="gray.600"
               borderRadius="md"

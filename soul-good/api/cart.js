@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.VITE_SUPABASE_ANON_KEY
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
 )
 
 export default async function handler(req, res) {
@@ -55,9 +55,9 @@ export default async function handler(req, res) {
     return res.json({ ok: true, id: newItem.id })
   }
 
-  // PUT /api/cart?id=<cartItemId> — update quantity
+  // PUT /api/cart/<id> — update quantity (id from URL path)
   if (req.method === 'PUT') {
-    const { id } = req.query
+    const id = req.url.split('?')[0].split('/').filter(Boolean).pop()
     const { quantity } = req.body
     if (!id) return res.status(422).json({ error: 'Missing id' })
     if (typeof quantity === 'undefined') return res.status(422).json({ error: 'Missing quantity' })
@@ -71,9 +71,9 @@ export default async function handler(req, res) {
     return res.json({ ok: true })
   }
 
-  // DELETE /api/cart?id=<cartItemId>
+  // DELETE /api/cart/<id> (id from URL path)
   if (req.method === 'DELETE') {
-    const { id } = req.query
+    const id = req.url.split('?')[0].split('/').filter(Boolean).pop()
     if (!id) return res.status(422).json({ error: 'Missing id' })
 
     const { error, count } = await supabase

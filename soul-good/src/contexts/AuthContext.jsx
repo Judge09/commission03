@@ -11,8 +11,6 @@ import {
   clearAuthTokens,
   isAuthenticated,
   logout as logoutUtil,
-  isTokenExpiringSoon,
-  refreshAccessToken,
 } from '../utils/auth';
 
 const AuthContext = createContext(null);
@@ -41,29 +39,9 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticatedState(authenticated);
       setUser(currentUser);
       setLoading(false);
-
-      // Set up automatic token refresh if token is expiring soon
-      if (authenticated && isTokenExpiringSoon()) {
-        refreshAccessToken().catch((err) => {
-          console.error('Failed to refresh token on mount:', err);
-          logout();
-        });
-      }
     };
 
     checkAuth();
-
-    // Set up periodic token refresh check (every 4 minutes)
-    const refreshInterval = setInterval(() => {
-      if (isAuthenticated() && isTokenExpiringSoon()) {
-        refreshAccessToken().catch((err) => {
-          console.error('Failed to refresh token:', err);
-          logout();
-        });
-      }
-    }, 4 * 60 * 1000); // 4 minutes
-
-    return () => clearInterval(refreshInterval);
   }, []);
 
   /**
