@@ -9,7 +9,6 @@ import {
   Input,
   Badge,
   Heading,
-  Stack,
   Image,
   Link,
   useDisclosure,
@@ -404,10 +403,9 @@ const randomIcons = useMemo(() => {
         <Container maxW="container.lg" py={{ base: 4, md: 8 }}>
           <VStack spacing={6} align="stretch">
             {/* Categories + Search inline (responsive) - STICKY HEADER */}
-            <Stack
-              direction={{ base: "column", md: "row" }}
+            <HStack
               align="center"
-              spacing={4}
+              spacing={3}
               position="sticky"
               top={{ base: "-1px", md: 0 }}
               bg="orange.50"
@@ -431,34 +429,33 @@ const randomIcons = useMemo(() => {
                 zIndex: -1,
               }}
             >
-              <Box maxW={{ base: "100%", md: "320px" }} w={{ base: "100%", md: "auto" }}>
-                <Select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  bg="white"
-                  size="md"
-                  aria-label="Filter by category"
-                  fontFamily="var(--font-lora)"
-                >
-                  {Object.entries(categories).map(([cat, count]) => (
-                    <option key={cat} value={cat}>
-                      {`${cat} (${count})`}
-                    </option>
-                  ))}
-                </Select>
-              </Box>
+              <Select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                bg="white"
+                size="md"
+                aria-label="Filter by category"
+                fontFamily="var(--font-lora)"
+                flexShrink={0}
+                w={{ base: "140px", md: "220px" }}
+              >
+                {Object.entries(categories).map(([cat, count]) => (
+                  <option key={cat} value={cat}>
+                    {`${cat} (${count})`}
+                  </option>
+                ))}
+              </Select>
 
-              <Box flex={1}>
-                <Input
-                  placeholder="Search dishes, ingredients..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  bg="white"
-                  borderRadius="md"
-                  fontFamily="var(--font-lora)"
-                />
-              </Box>
-            </Stack>
+              <Input
+                placeholder="Search dishes, ingredients..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                bg="white"
+                borderRadius="md"
+                fontFamily="var(--font-lora)"
+                flex={1}
+              />
+            </HStack>
 
 
 
