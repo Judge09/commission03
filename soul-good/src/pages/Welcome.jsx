@@ -360,7 +360,7 @@ export default function Welcome() {
             <Box
               position="absolute"
               inset={0}
-              bgImage="url('/promo2.png')"
+              bgImage="url('/slides.jpg')"
               bgSize="cover"
               bgPos="center"
             />
