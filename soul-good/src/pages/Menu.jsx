@@ -12,6 +12,7 @@ import {
   Image,
   Link,
   useDisclosure,
+  useToast,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -55,17 +56,17 @@ export default function Menu() {
   const [category, setCategory] = useState("All");
   const [activePromo, setActivePromo] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isOpen: isQuantityOpen, onOpen: onQuantityOpen, onClose: onQuantityClose } = useDisclosure();
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+  const toast = useToast();
   const { user: authUser, logout: authLogout } = useAuth();
   const {
     isFavorite,
     toggleFavorite,
     addToCart,
+    updateQuantity,
+    getCartItem,
     cartItemCount,
-    getItemQuantity
+    getItemQuantity,
   } = useCart();
 
   // Auto-rotate promos
@@ -100,32 +101,43 @@ export default function Menu() {
 
   const nextPromo = () => setActivePromo((prev) => (prev + 1) % promos.length);
 
-  // Get user from auth context
   const user = authUser;
-
-  // Cart and favorites are now managed by CartContext
 
   const handleToggleFavorite = (item) => {
     if (!user) return alert("Please log in to save favorites.");
     toggleFavorite(item);
   };
 
-  const handleAddToCart = (item) => {
+  const handleAdd = async (item) => {
     if (!user) return alert("Please log in to add to cart.");
-    setSelectedItem(item);
-    setQuantity(1);
-    onQuantityOpen();
-  };
-
-  const confirmAddToCart = async () => {
     try {
-      await addToCart(selectedItem, quantity);
-      onQuantityClose();
-      setSelectedItem(null);
-      setQuantity(1);
+      await addToCart(item, 1);
+      toast({
+        title: "Added to cart",
+        description: item.name,
+        status: "success",
+        duration: 1800,
+        isClosable: true,
+        position: "bottom",
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to add to cart");
+      toast({ title: "Failed to add", status: "error", duration: 2000, position: "bottom" });
+    }
+  };
+
+  const handleRemove = async (item) => {
+    const cartItem = getCartItem(item.id || item.item_id);
+    if (!cartItem) return;
+    try {
+      if (cartItem.quantity <= 1) {
+        await updateQuantity(cartItem.id, 0);
+      } else {
+        await updateQuantity(cartItem.id, cartItem.quantity - 1);
+      }
+    } catch (err) {
+      console.error(err);
+      toast({ title: "Failed to update cart", status: "error", duration: 2000, position: "bottom" });
     }
   };
 
@@ -268,51 +280,6 @@ const randomIcons = useMemo(() => {
               </Button>
               <Button colorScheme="orange" ml={3} onClick={handleLogout}>
                 Logout
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-
-        {/* Quantity Adjustment Modal */}
-        <Modal isOpen={isQuantityOpen} onClose={onQuantityClose} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader fontFamily="var(--font-the-seasons)">
-              {selectedItem?.name}
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <VStack spacing={4}>
-                <Text>Select quantity to add to cart:</Text>
-                <HStack spacing={4}>
-                  <Button
-                    colorScheme="orange"
-                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    isDisabled={quantity <= 1}
-                  >
-                    -
-                  </Button>
-                  <Text fontSize="2xl" fontWeight="bold" minW="50px" textAlign="center">
-                    {quantity}
-                  </Text>
-                  <Button
-                    colorScheme="orange"
-                    onClick={() => setQuantity((q) => q + 1)}
-                  >
-                    +
-                  </Button>
-                </HStack>
-                <Text fontSize="lg" fontFamily="var(--font-the-seasons)" fontWeight="bold">
-                  Total: ₱{selectedItem ? (selectedItem.price * quantity).toFixed(2) : '0.00'}
-                </Text>
-              </VStack>
-            </ModalBody>
-            <ModalFooter>
-              <Button variant="ghost" onClick={onQuantityClose} mr={3}>
-                Cancel
-              </Button>
-              <Button colorScheme="orange" onClick={confirmAddToCart}>
-                Add to Cart
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -486,7 +453,8 @@ const randomIcons = useMemo(() => {
                   isFavorite={isFavorite(item.id)}
                   quantity={getItemQuantity(item.id)}
                   onToggleFavorite={() => handleToggleFavorite(item)}
-                  onAddToCart={() => handleAddToCart(item)}
+                  onAdd={() => handleAdd(item)}
+                  onRemove={() => handleRemove(item)}
                 />
               ))}
             </Box>

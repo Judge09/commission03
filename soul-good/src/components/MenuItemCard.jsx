@@ -20,27 +20,83 @@ import {
   Button,
   Divider,
   IconButton,
+  Flex,
 } from "@chakra-ui/react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 
-export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", isFavorite = false, quantity = 0, onToggleFavorite, onAddToCart }) {
+// Inline +/- stepper — used both on the card and inside the modal
+function QuantityStepper({ quantity, onAdd, onRemove, size = "sm" }) {
+  if (quantity === 0) {
+    return (
+      <Button
+        size={size}
+        colorScheme="orange"
+        borderRadius="full"
+        px={5}
+        onClick={(e) => { e.stopPropagation(); onAdd(); }}
+        fontFamily="var(--font-lora)"
+      >
+        Add to Cart
+      </Button>
+    );
+  }
+  return (
+    <HStack
+      spacing={2}
+      bg="orange.500"
+      borderRadius="full"
+      px={2}
+      py={1}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <IconButton
+        aria-label="decrease"
+        icon={<MinusIcon />}
+        size="xs"
+        variant="ghost"
+        color="white"
+        _hover={{ bg: "orange.600" }}
+        borderRadius="full"
+        onClick={(e) => { e.stopPropagation(); onRemove(); }}
+      />
+      <Text color="white" fontWeight="700" fontSize="sm" minW="16px" textAlign="center">
+        {quantity}
+      </Text>
+      <IconButton
+        aria-label="increase"
+        icon={<AddIcon />}
+        size="xs"
+        variant="ghost"
+        color="white"
+        _hover={{ bg: "orange.600" }}
+        borderRadius="full"
+        onClick={(e) => { e.stopPropagation(); onAdd(); }}
+      />
+    </HStack>
+  );
+}
+
+export default function MenuItemCard({
+  item,
+  imgFallback = "/default-food.jpg",
+  isFavorite = false,
+  quantity = 0,
+  onToggleFavorite,
+  onAdd,
+  onRemove,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.700", "gray.200");
-
-  // Design spec: Highlight card if favorited AND has quantity > 0
   const isActive = isFavorite && quantity > 0;
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onOpen();
-    }
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(); }
   };
 
   return (
     <>
-      {/* Default Card - with active state styling */}
       <Box
         bg={isActive ? "orange.100" : isFavorite ? "orange.50" : bg}
         rounded="2xl"
@@ -53,90 +109,92 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
         tabIndex={0}
         onClick={onOpen}
         onKeyDown={handleKeyDown}
-        transition="transform 150ms ease, box-shadow 150ms ease, background-color 200ms ease, border-color 200ms ease"
+        transition="transform 150ms ease, box-shadow 150ms ease, background-color 200ms ease"
         _hover={{ transform: "translateY(-4px)", boxShadow: "lg" }}
+        display="flex"
+        flexDirection="column"
       >
-        <Box position="relative">
+        {/* Image */}
+        <Box position="relative" flexShrink={0}>
           <Image
             src={item.image || imgFallback}
             alt={item.name}
             objectFit="cover"
             w="100%"
-            h={{ base: "160px", md: "220px" }}
+            h={{ base: "140px", md: "200px" }}
             fallbackSrc={imgFallback}
           />
-
+          {/* Price badge */}
           <Badge
             position="absolute"
-            top={3}
-            right={3}
+            top={2}
+            right={2}
             bg="whiteAlpha.900"
             color="gray.800"
-            px={3}
+            px={2}
             py={1}
             borderRadius="full"
             fontWeight="semibold"
             boxShadow="sm"
             fontFamily="var(--font-the-seasons)"
+            fontSize="xs"
           >
             ₱{item.price}
           </Badge>
-
+          {/* In-cart badge */}
+          {quantity > 0 && (
+            <Badge
+              position="absolute"
+              top={2}
+              left={2}
+              bg="orange.500"
+              color="white"
+              px={2}
+              py={1}
+              borderRadius="full"
+              fontSize="xs"
+              fontWeight="700"
+            >
+              {quantity} in cart
+            </Badge>
+          )}
           {/* Favorite button */}
           <IconButton
             aria-label="favorite"
             icon={isFavorite ? <FaHeart color="#e53e3e" /> : <FaRegHeart />}
             position="absolute"
-            top={3}
-            left={3}
+            bottom={2}
+            right={2}
             size="sm"
             bg="whiteAlpha.900"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onToggleFavorite) onToggleFavorite();
-            }}
+            borderRadius="full"
+            onClick={(e) => { e.stopPropagation(); if (onToggleFavorite) onToggleFavorite(); }}
           />
         </Box>
 
-        <VStack
-          align="start"
-          spacing={2}
-          p={4}
-          minH={{ base: "100px", md: "auto" }}
-        >
+        {/* Card body */}
+        <Flex direction="column" justify="space-between" flex="1" p={3} gap={2}>
           <Heading size="sm" color={textColor} noOfLines={1} fontFamily="var(--font-the-seasons)">
             {item.name}
           </Heading>
-
-          {/* Mobile hides extra stuff */}
-          <Text
-            color="gray.500"
-            fontSize="xs"
-            noOfLines={1}
-            display={{ base: "none", md: "block" }}
-          >
+          <Text color="gray.500" fontSize="xs" noOfLines={1} display={{ base: "none", md: "block" }}>
             {item.description || "—"}
           </Text>
 
-          {/* Quick tip for mobile */}
-          <Text fontSize="xs" color="gray.400" mt={1}>
-            Tap for details
-          </Text>
-        </VStack>
+          {/* Stepper pinned to bottom of card */}
+          <Flex justify="center" pt={1} onClick={(e) => e.stopPropagation()}>
+            <QuantityStepper quantity={quantity} onAdd={onAdd} onRemove={onRemove} />
+          </Flex>
+        </Flex>
       </Box>
 
-      {/* Modal (adjusted for mobile, scrollable) */}
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        size={{ base: "sm", md: "md", lg: "lg" }}
-        isCentered
-      >
+      {/* Detail modal */}
+      <Modal isOpen={isOpen} onClose={onClose} size={{ base: "sm", md: "md", lg: "lg" }} isCentered scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{item.name}</ModalHeader>
+          <ModalHeader fontFamily="var(--font-the-seasons)" pr={10}>{item.name}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxH="70vh" overflowY="auto">
+          <ModalBody>
             <Stack spacing={4}>
               <Image
                 src={item.image || imgFallback}
@@ -144,13 +202,16 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
                 borderRadius="md"
                 objectFit="cover"
                 fallbackSrc={imgFallback}
-                maxH={{ base: "180px", md: "250px" }}
+                maxH={{ base: "180px", md: "240px" }}
+                w="100%"
               />
 
-              <HStack justify="space-between">
+              <HStack justify="space-between" align="center">
                 <Text fontWeight="bold" fontSize="lg" fontFamily="var(--font-the-seasons)">
                   ₱{item.price}
                 </Text>
+                {/* Stepper inside modal */}
+                <QuantityStepper quantity={quantity} onAdd={onAdd} onRemove={onRemove} size="md" />
               </HStack>
 
               <Text color="gray.600">
@@ -160,9 +221,7 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
               {item.tags && item.tags.length > 0 && (
                 <HStack spacing={2} wrap="wrap">
                   {item.tags.map((t) => (
-                    <Badge key={t} colorScheme="orange" variant="subtle">
-                      {t}
-                    </Badge>
+                    <Badge key={t} colorScheme="orange" variant="subtle">{t}</Badge>
                   ))}
                 </HStack>
               )}
@@ -170,26 +229,18 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
               <Divider />
 
               <Box>
-                <Heading size="sm" mb={2} fontFamily="var(--font-sachez)">
-                  Nutrition
-                </Heading>
+                <Heading size="sm" mb={2} fontFamily="var(--font-sachez)">Nutrition</Heading>
                 <Stack spacing={1}>
                   {item.nutrition
                     ? Object.entries(item.nutrition).map(([key, value]) => (
                         <Text key={key} fontSize="sm" color="gray.500">
-                          {`${key[0].toUpperCase() + key.slice(1)}: ${
-                            value || "—"
-                          }`}
+                          {`${key[0].toUpperCase() + key.slice(1)}: ${value || "—"}`}
                         </Text>
                       ))
                     : (
                       <>
-                        <Text fontSize="sm" color="gray.500">
-                          Calories: {item.calories || "—"}
-                        </Text>
-                        <Text fontSize="sm" color="gray.500">
-                          Protein: {item.protein || "—"}
-                        </Text>
+                        <Text fontSize="sm" color="gray.500">Calories: {item.calories || "—"}</Text>
+                        <Text fontSize="sm" color="gray.500">Protein: {item.protein || "—"}</Text>
                       </>
                     )}
                 </Stack>
@@ -197,9 +248,7 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
 
               {item.ingredients && item.ingredients.length > 0 && (
                 <Box>
-                  <Heading size="sm" mb={2}>
-                    Ingredients
-                  </Heading>
+                  <Heading size="sm" mb={2}>Ingredients</Heading>
                   <Text fontSize="sm" color="gray.600">
                     {item.ingredients.map((ing) => ing.toLowerCase()).join(", ")}
                   </Text>
@@ -208,24 +257,15 @@ export default function MenuItemCard({ item, imgFallback = "/default-food.jpg", 
 
               {item.allergens && item.allergens.length > 0 && (
                 <Box>
-                  <Heading size="sm" mb={2}>
-                    Allergens
-                  </Heading>
-                  <Text fontSize="sm" color="red.500">
-                    {item.allergens.join(", ")}
-                  </Text>
+                  <Heading size="sm" mb={2}>Allergens</Heading>
+                  <Text fontSize="sm" color="red.500">{item.allergens.join(", ")}</Text>
                 </Box>
               )}
             </Stack>
           </ModalBody>
 
           <ModalFooter>
-            <Button onClick={onClose} mr={3}>
-              Close
-            </Button>
-            <Button colorScheme="orange" onClick={() => onAddToCart && onAddToCart()}>
-              Add to Cart
-            </Button>
+            <Button variant="ghost" onClick={onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

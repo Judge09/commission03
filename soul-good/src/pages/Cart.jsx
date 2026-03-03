@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  Container,
   Heading,
   VStack,
   HStack,
@@ -8,100 +9,280 @@ import {
   Image,
   Button,
   IconButton,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Divider,
-  Link,
+  Badge,
+  Flex,
+  Icon,
 } from "@chakra-ui/react";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaShoppingCart } from "react-icons/fa";
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
+import Logo from "/soul-good-logo.png";
+
+function QuantityStepper({ quantity, onIncrease, onDecrease }) {
+  return (
+    <HStack spacing={0} bg="orange.500" borderRadius="full" px={1} py={1}>
+      <IconButton
+        aria-label="decrease"
+        icon={<MinusIcon boxSize="10px" />}
+        size="xs"
+        variant="ghost"
+        color="white"
+        borderRadius="full"
+        _hover={{ bg: "orange.600" }}
+        onClick={onDecrease}
+      />
+      <Text
+        color="white"
+        fontWeight="700"
+        fontSize="sm"
+        minW="24px"
+        textAlign="center"
+      >
+        {quantity}
+      </Text>
+      <IconButton
+        aria-label="increase"
+        icon={<AddIcon boxSize="10px" />}
+        size="xs"
+        variant="ghost"
+        color="white"
+        borderRadius="full"
+        _hover={{ bg: "orange.600" }}
+        onClick={onIncrease}
+      />
+    </HStack>
+  );
+}
 
 export default function Cart() {
   const { cartItems, updateQuantity, removeFromCart, cartTotal } = useCart();
 
+  const handleIncrease = (item) => updateQuantity(item.id, item.quantity + 1);
+  const handleDecrease = (item) => updateQuantity(item.id, item.quantity - 1);
+
   return (
-    <Box minH="100vh" p={6} bg="orange.50">
-      <HStack justify="space-between" mb={4}>
-        <Heading fontFamily="var(--font-lora)">Your Cart</Heading>
-        <Button as={RouterLink} to="/menu" variant="ghost" colorScheme="orange" size="sm">
-          Continue Shopping
+    <Box minH="100vh" bg="orange.50">
+      {/* Navbar */}
+      <HStack
+        justify="space-between"
+        align="center"
+        px={{ base: 4, md: 8 }}
+        py={3}
+        bg="white"
+        boxShadow="sm"
+      >
+        <HStack spacing={3}>
+          <Image src={Logo} alt="Soul Good Logo" boxSize="40px" />
+          <Heading fontSize="lg" color="orange.600" fontFamily="var(--font-recoleta)">
+            Soul Good Cafe
+          </Heading>
+        </HStack>
+        <Button
+          as={RouterLink}
+          to="/menu"
+          colorScheme="orange"
+          variant="ghost"
+          size="sm"
+        >
+          ← Back to Menu
         </Button>
       </HStack>
 
-      <VStack spacing={4} align="stretch">
+      <Container maxW="container.md" py={{ base: 6, md: 10 }}>
+        {/* Page title */}
+        <HStack mb={6} spacing={3} align="center">
+          <Icon as={FaShoppingCart} color="orange.500" boxSize={6} />
+          <Heading fontSize={{ base: "2xl", md: "3xl" }} color="orange.700" fontFamily="var(--font-recoleta)">
+            Your Cart
+          </Heading>
+          {cartItems.length > 0 && (
+            <Badge colorScheme="orange" borderRadius="full" px={3} py={1} fontSize="sm">
+              {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
+            </Badge>
+          )}
+        </HStack>
+
         {cartItems.length === 0 ? (
-          <VStack spacing={4} py={8}>
-            <Text color="gray.600" fontSize="lg">Your cart is empty.</Text>
-            <Button as={RouterLink} to="/menu" colorScheme="orange">
+          /* Empty state */
+          <VStack
+            spacing={5}
+            py={16}
+            bg="white"
+            borderRadius="2xl"
+            boxShadow="md"
+            align="center"
+          >
+            <Icon as={FaShoppingCart} boxSize={14} color="orange.200" />
+            <VStack spacing={1}>
+              <Text fontWeight="600" fontSize="lg" color="gray.700" fontFamily="var(--font-the-seasons)">
+                Your cart is empty
+              </Text>
+              <Text fontSize="sm" color="gray.400" fontFamily="var(--font-lora)">
+                Add some delicious items from the menu
+              </Text>
+            </VStack>
+            <Button
+              as={RouterLink}
+              to="/menu"
+              colorScheme="orange"
+              borderRadius="full"
+              px={8}
+              fontFamily="var(--font-lora)"
+            >
               Browse Menu
             </Button>
           </VStack>
         ) : (
-          <>
-            {cartItems.map((it) => (
-              <Box key={it.id} bg="white" p={4} borderRadius="md" shadow="sm">
-                <HStack align="center" spacing={4}>
-                  <Image
-                    src={it.image || "/default-food.jpg"}
-                    boxSize="60px"
-                    objectFit="cover"
-                    borderRadius="md"
-                  />
-                  <Box flex={1}>
-                    <Text fontWeight="bold" fontFamily="var(--font-the-seasons)">
-                      {it.name}
-                    </Text>
-                    <Text fontSize="sm" color="gray.500" fontFamily="var(--font-the-seasons)">
-                      ₱{it.price}
-                    </Text>
-                  </Box>
-                  <HStack spacing={2}>
-                    <NumberInput
-                      size="sm"
-                      maxW={20}
-                      min={1}
-                      value={it.quantity}
-                      onChange={(v) => updateQuantity(it.id, Number(v || 1))}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+          <VStack spacing={4} align="stretch">
+            {/* Cart items */}
+            <VStack spacing={3} align="stretch">
+              {cartItems.map((item) => (
+                <Box
+                  key={item.id}
+                  bg="white"
+                  borderRadius="2xl"
+                  boxShadow="sm"
+                  p={4}
+                  borderWidth="1px"
+                  borderColor="orange.100"
+                  transition="box-shadow 0.15s"
+                  _hover={{ boxShadow: "md" }}
+                >
+                  <HStack spacing={4} align="center">
+                    {/* Image */}
+                    <Image
+                      src={item.image || "/default-food.jpg"}
+                      fallbackSrc="/default-food.jpg"
+                      boxSize={{ base: "64px", md: "80px" }}
+                      objectFit="cover"
+                      borderRadius="xl"
+                      flexShrink={0}
+                    />
+
+                    {/* Name + unit price */}
+                    <Box flex={1} minW={0}>
+                      <Text
+                        fontWeight="700"
+                        fontSize={{ base: "sm", md: "md" }}
+                        noOfLines={1}
+                        fontFamily="var(--font-the-seasons)"
+                        color="gray.800"
+                      >
+                        {item.name}
+                      </Text>
+                      <Text fontSize="sm" color="gray.400" fontFamily="var(--font-lora)">
+                        ₱{item.price} each
+                      </Text>
+                    </Box>
+
+                    {/* Stepper + subtotal */}
+                    <VStack spacing={1} align="flex-end" flexShrink={0}>
+                      <QuantityStepper
+                        quantity={item.quantity}
+                        onIncrease={() => handleIncrease(item)}
+                        onDecrease={() => handleDecrease(item)}
+                      />
+                      <Text
+                        fontWeight="700"
+                        fontSize="sm"
+                        color="orange.600"
+                        fontFamily="var(--font-the-seasons)"
+                      >
+                        ₱{(item.price * item.quantity).toFixed(2)}
+                      </Text>
+                    </VStack>
+
+                    {/* Remove */}
                     <IconButton
                       aria-label="Remove item"
                       icon={<FaTrash />}
                       size="sm"
-                      colorScheme="red"
                       variant="ghost"
-                      onClick={() => removeFromCart(it.id)}
+                      colorScheme="red"
+                      borderRadius="full"
+                      flexShrink={0}
+                      onClick={() => removeFromCart(item.id)}
                     />
                   </HStack>
-                </HStack>
-              </Box>
-            ))}
+                </Box>
+              ))}
+            </VStack>
 
-            <Divider />
-            <HStack justify="space-between" py={2}>
-              <Text fontWeight="bold" fontSize="lg" fontFamily="var(--font-lora)">
-                Total
-              </Text>
-              <Text fontWeight="bold" fontSize="xl" fontFamily="var(--font-the-seasons)">
-                ₱{cartTotal.toFixed(2)}
-              </Text>
-            </HStack>
+            {/* Order summary */}
+            <Box
+              bg="white"
+              borderRadius="2xl"
+              boxShadow="md"
+              p={{ base: 5, md: 6 }}
+              borderWidth="1px"
+              borderColor="orange.100"
+              mt={2}
+            >
+              <Heading
+                fontSize="lg"
+                color="orange.700"
+                fontFamily="var(--font-recoleta)"
+                mb={4}
+              >
+                Order Summary
+              </Heading>
 
-            <Button colorScheme="orange" size="lg" isDisabled={cartItems.length === 0}>
+              <VStack spacing={2} align="stretch">
+                {cartItems.map((item) => (
+                  <HStack key={item.id} justify="space-between">
+                    <Text fontSize="sm" color="gray.600" fontFamily="var(--font-lora)" noOfLines={1} flex={1} mr={2}>
+                      {item.name}{" "}
+                      <Text as="span" color="gray.400">
+                        ×{item.quantity}
+                      </Text>
+                    </Text>
+                    <Text fontSize="sm" fontWeight="600" fontFamily="var(--font-the-seasons)" flexShrink={0}>
+                      ₱{(item.price * item.quantity).toFixed(2)}
+                    </Text>
+                  </HStack>
+                ))}
+              </VStack>
+
+              <Divider my={4} borderColor="orange.100" />
+
+              <HStack justify="space-between">
+                <Text fontWeight="700" fontSize="md" fontFamily="var(--font-lora)" color="gray.700">
+                  Total
+                </Text>
+                <Text fontWeight="800" fontSize="xl" fontFamily="var(--font-the-seasons)" color="orange.600">
+                  ₱{cartTotal.toFixed(2)}
+                </Text>
+              </HStack>
+            </Box>
+
+            {/* Checkout button */}
+            <Button
+              colorScheme="orange"
+              size="lg"
+              borderRadius="full"
+              fontFamily="var(--font-lora)"
+              fontWeight="600"
+              py={7}
+              fontSize="md"
+            >
               Proceed to Checkout
             </Button>
-          </>
+
+            <Button
+              as={RouterLink}
+              to="/menu"
+              variant="ghost"
+              colorScheme="orange"
+              size="sm"
+              fontFamily="var(--font-lora)"
+            >
+              ← Continue Shopping
+            </Button>
+          </VStack>
         )}
-      </VStack>
+      </Container>
     </Box>
   );
 }
