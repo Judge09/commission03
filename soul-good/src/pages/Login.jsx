@@ -12,7 +12,6 @@ import {
   VStack,
   Image,
   Select,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { FaUserCircle } from "react-icons/fa";
@@ -141,7 +140,7 @@ export default function Login() {
   const cardBg    = isDark ? "#202124"  : "white";
   const cardBorder= isDark ? "none"     : "1px solid #dadce0";
   const headingC  = isDark ? "white"    : "#202124";
-  const subtitleC = isDark ? "#9aa0a6"  : "#5f6368";
+  const subtitleC = isDark ? "#e8eaed"  : "#5f6368";
   const bodyTextC = isDark ? "#e8eaed"  : "#202124";
   const linkColor = isDark ? "#8ab4f8"  : "#1a73e8";
   const footerC   = isDark ? "#9aa0a6"  : "#70757a";
@@ -170,18 +169,146 @@ export default function Login() {
     </Button>
   );
 
+  const Step1Content = () => (
+    <>
+      <Image
+        src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
+        alt="Google"
+        boxSize="40px"
+        mb={{ base: 6, md: 2 }}
+      />
+      {/* On mobile: heading + subtitle above input in one column */}
+      <Box display={{ base: "block", md: "none" }} mb={6}>
+        <Text fontSize="32px" fontWeight="400" color={headingC} lineHeight="1.15" mb={2}>
+          Sign in
+        </Text>
+        <Text fontSize="16px" color={subtitleC} fontWeight="400">
+          Use your Google Account
+        </Text>
+      </Box>
+    </>
+  );
+
+  const Step2Content = () => (
+    <>
+      <Image
+        src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
+        alt="Google"
+        boxSize="40px"
+        mb={{ base: 6, md: 2 }}
+      />
+      <Box display={{ base: "block", md: "none" }} mb={4}>
+        <Text fontSize="32px" fontWeight="400" color={headingC} lineHeight="1.15" mb={3}>
+          Welcome
+        </Text>
+        <HStack
+          spacing={2}
+          bg={chipBg}
+          border={`1px solid ${chipBorder}`}
+          borderRadius="20px"
+          px={3}
+          py="6px"
+          cursor="pointer"
+          onClick={() => setStep(1)}
+          _hover={{ bg: chipHover }}
+          w="fit-content"
+          maxW="100%"
+        >
+          <Box color={subtitleC} flexShrink={0} fontSize="18px"><FaUserCircle /></Box>
+          <Text fontSize="14px" color={headingC} noOfLines={1} maxW="200px">{email}</Text>
+          <ChevronDownIcon color={subtitleC} boxSize={4} flexShrink={0} />
+        </HStack>
+      </Box>
+    </>
+  );
+
   return (
     <Flex
       minH="100vh"
       bg={pageBg}
-      justify="center"
-      align="center"
       direction="column"
       fontFamily="'Google Sans', Roboto, Arial, sans-serif"
     >
-      {/* Card */}
-      <Flex direction="column" w="100%" flex="1" justify="center" align="center" px={4}>
+      {/* Main — fills all space, centers card on desktop */}
+      <Flex w="100%" flex="1" justify="center" align="center" px={{ base: 0, md: 4 }}>
+
+        {/* ── MOBILE: full-screen single column ── */}
+        <Box display={{ base: "flex", md: "none" }} flexDirection="column" w="100%" minH="100vh" px={8} pt={10} pb={6}>
+          {step === 1 ? (
+            <Flex direction="column" flex="1">
+              <Step1Content />
+              <VStack align="stretch" spacing={5} flex="1">
+                <NotchedInput
+                  label="Email or phone"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  isDark={isDark}
+                />
+                <Link href="https://accounts.google.com/signin/recovery" isExternal color={linkColor} fontSize="14px" fontWeight="500" _hover={{ textDecoration: "underline" }}>
+                  Forgot email?
+                </Link>
+                <Box pt={2}>
+                  <Text fontSize="14px" color={bodyTextC} lineHeight="1.7" mb={1}>
+                    Not your computer? Use Guest mode to sign in privately.{" "}
+                    <Link href="https://support.google.com/chrome/answer/6130773" isExternal color={linkColor} fontSize="14px" fontWeight="500" _hover={{ textDecoration: "underline" }}>
+                      Learn more about using Guest mode
+                    </Link>
+                  </Text>
+                </Box>
+              </VStack>
+              <HStack justify="space-between" align="center" pt={10}>
+                <Link href="https://accounts.google.com/signup" isExternal color={linkColor} fontSize="14px" fontWeight="500" _hover={{ textDecoration: "underline" }}>
+                  Create account
+                </Link>
+                <NextBtn onClick={handleNext} />
+              </HStack>
+            </Flex>
+          ) : (
+            <Flex direction="column" flex="1">
+              <Step2Content />
+              <VStack align="stretch" spacing={5} flex="1">
+                <NotchedInput
+                  label="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type={showPassword ? "text" : "password"}
+                  isDark={isDark}
+                />
+                <Checkbox
+                  isChecked={showPassword}
+                  onChange={(e) => setShowPassword(e.target.checked)}
+                  size="md"
+                  sx={{
+                    ".chakra-checkbox__control": { borderColor: isDark ? "#5f6368" : "#dadce0", bg: "transparent", borderRadius: "3px", borderWidth: "2px" },
+                    ".chakra-checkbox__control[data-checked]": { bg: isDark ? "#8ab4f8" : "#1a73e8", borderColor: isDark ? "#8ab4f8" : "#1a73e8", color: isDark ? "#062e6f" : "white" },
+                  }}
+                >
+                  <Text fontSize="14px" color={bodyTextC}>Show password</Text>
+                </Checkbox>
+              </VStack>
+              <HStack justify="space-between" align="center" pt={10}>
+                <Link href="https://accounts.google.com/signin/v2/challenge/pwd" isExternal color={linkColor} fontSize="14px" fontWeight="500" _hover={{ textDecoration: "underline" }}>
+                  Try another way
+                </Link>
+                <NextBtn onClick={handleLogin} />
+              </HStack>
+            </Flex>
+          )}
+
+          {/* Mobile footer */}
+          <Box pt={8} pb={2}>
+            <Select w="fit-content" minW="200px" bg="transparent" border="none" color={footerC} fontSize="13px" _focus={{ outline: "none", boxShadow: "none" }} iconColor={footerC}>
+              <option value="en" style={{ background: isDark ? "#202124" : "white", color: isDark ? "white" : "#202124" }}>English (United States)</option>
+              <option value="fil" style={{ background: isDark ? "#202124" : "white", color: isDark ? "white" : "#202124" }}>Filipino</option>
+              <option value="es"  style={{ background: isDark ? "#202124" : "white", color: isDark ? "white" : "#202124" }}>Español</option>
+            </Select>
+          </Box>
+        </Box>
+
+        {/* ── DESKTOP: centered card ── */}
         <Box
+          display={{ base: "none", md: "block" }}
           w="100%"
           maxW="780px"
           bg={cardBg}
@@ -190,201 +317,59 @@ export default function Login() {
           overflow="hidden"
         >
           {step === 1 ? (
-            /* ── STEP 1: Email ── */
-            <Flex direction={{ base: "column", md: "row" }} minH="360px">
+            <Flex direction="row" minH="360px">
               {/* Left */}
-              <Flex
-                direction="column"
-                justify="flex-start"
-                w={{ base: "100%", md: "340px" }}
-                flexShrink={0}
-                px={{ base: 8, md: 11 }}
-                pt={10}
-                pb={10}
-                gap={3}
-              >
-                <Image
-                  src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
-                  alt="Google"
-                  boxSize="40px"
-                  mb={2}
-                />
-                <Text fontSize="32px" fontWeight="400" color={headingC} lineHeight="1.15">
-                  Sign in
-                </Text>
-                <Text fontSize="16px" color={subtitleC} fontWeight="400">
-                  Use your Google Account
-                </Text>
+              <Flex direction="column" justify="flex-start" w="340px" flexShrink={0} px={11} pt={10} pb={10} gap={3}>
+                <Image src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google" boxSize="40px" mb={2} />
+                <Text fontSize="32px" fontWeight="400" color={headingC} lineHeight="1.15">Sign in</Text>
+                <Text fontSize="16px" color={subtitleC} fontWeight="400">Use your Google Account</Text>
               </Flex>
-
               {/* Right */}
-              <Flex
-                direction="column"
-                justify="space-between"
-                flex="1"
-                px={{ base: 8, md: 10 }}
-                pt={10}
-                pb={8}
-              >
+              <Flex direction="column" justify="space-between" flex="1" px={10} pt={10} pb={8}>
                 <VStack align="stretch" spacing={5}>
-                  <NotchedInput
-                    label="Email or phone"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    type="email"
-                    isDark={isDark}
-                  />
-
-                  <Link
-                    href="https://accounts.google.com/signin/recovery"
-                    isExternal
-                    color={linkColor}
-                    fontSize="14px"
-                    fontWeight="500"
-                    _hover={{ textDecoration: "underline" }}
-                    display="block"
-                  >
-                    Forgot email?
-                  </Link>
-
+                  <NotchedInput label="Email or phone" value={email} onChange={(e) => setEmail(e.target.value)} type="email" isDark={isDark} />
+                  <Link href="https://accounts.google.com/signin/recovery" isExternal color={linkColor} fontSize="14px" fontWeight="500" _hover={{ textDecoration: "underline" }} display="block">Forgot email?</Link>
                   <Box pt={2}>
-                    <Text fontSize="14px" color={bodyTextC} lineHeight="1.7" mb={1}>
-                      Not your computer? Use Guest mode to sign in privately.
-                    </Text>
-                    <Link
-                      href="https://support.google.com/chrome/answer/6130773"
-                      isExternal
-                      color={linkColor}
-                      fontSize="14px"
-                      fontWeight="500"
-                      _hover={{ textDecoration: "underline" }}
-                    >
-                      Learn more about using Guest mode
-                    </Link>
+                    <Text fontSize="14px" color={bodyTextC} lineHeight="1.7" mb={1}>Not your computer? Use Guest mode to sign in privately.</Text>
+                    <Link href="https://support.google.com/chrome/answer/6130773" isExternal color={linkColor} fontSize="14px" fontWeight="500" _hover={{ textDecoration: "underline" }}>Learn more about using Guest mode</Link>
                   </Box>
                 </VStack>
-
                 <HStack justify="space-between" align="center" pt={10}>
-                  <Link
-                    href="https://accounts.google.com/signup"
-                    isExternal
-                    color={linkColor}
-                    fontSize="14px"
-                    fontWeight="500"
-                    _hover={{ textDecoration: "underline" }}
-                  >
-                    Create account
-                  </Link>
+                  <Link href="https://accounts.google.com/signup" isExternal color={linkColor} fontSize="14px" fontWeight="500" _hover={{ textDecoration: "underline" }}>Create account</Link>
                   <NextBtn onClick={handleNext} />
                 </HStack>
               </Flex>
             </Flex>
           ) : (
-            /* ── STEP 2: Password ── */
-            <Flex direction={{ base: "column", md: "row" }} minH="360px">
+            <Flex direction="row" minH="360px">
               {/* Left */}
-              <Flex
-                direction="column"
-                justify="flex-start"
-                w={{ base: "100%", md: "340px" }}
-                flexShrink={0}
-                px={{ base: 8, md: 11 }}
-                pt={10}
-                pb={10}
-                gap={3}
-              >
-                <Image
-                  src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
-                  alt="Google"
-                  boxSize="40px"
-                  mb={2}
-                />
-                <Text fontSize="32px" fontWeight="400" color={headingC} lineHeight="1.15">
-                  Welcome
-                </Text>
-
-                {/* Email chip */}
-                <HStack
-                  spacing={2}
-                  bg={chipBg}
-                  border={`1px solid ${chipBorder}`}
-                  borderRadius="20px"
-                  px={3}
-                  py="6px"
-                  cursor="pointer"
-                  onClick={() => setStep(1)}
-                  _hover={{ bg: chipHover }}
-                  w="fit-content"
-                  maxW="260px"
-                >
-                  <Box color={subtitleC} flexShrink={0} fontSize="18px">
-                    <FaUserCircle />
-                  </Box>
-                  <Text
-                    fontSize="14px"
-                    color={headingC}
-                    noOfLines={1}
-                    maxW="170px"
-                  >
-                    {email}
-                  </Text>
+              <Flex direction="column" justify="flex-start" w="340px" flexShrink={0} px={11} pt={10} pb={10} gap={3}>
+                <Image src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google" boxSize="40px" mb={2} />
+                <Text fontSize="32px" fontWeight="400" color={headingC} lineHeight="1.15">Welcome</Text>
+                <HStack spacing={2} bg={chipBg} border={`1px solid ${chipBorder}`} borderRadius="20px" px={3} py="6px" cursor="pointer" onClick={() => setStep(1)} _hover={{ bg: chipHover }} w="fit-content" maxW="260px">
+                  <Box color={subtitleC} flexShrink={0} fontSize="18px"><FaUserCircle /></Box>
+                  <Text fontSize="14px" color={headingC} noOfLines={1} maxW="170px">{email}</Text>
                   <ChevronDownIcon color={subtitleC} boxSize={4} flexShrink={0} />
                 </HStack>
               </Flex>
-
               {/* Right */}
-              <Flex
-                direction="column"
-                justify="space-between"
-                flex="1"
-                px={{ base: 8, md: 10 }}
-                pt={10}
-                pb={8}
-              >
+              <Flex direction="column" justify="space-between" flex="1" px={10} pt={10} pb={8}>
                 <VStack align="stretch" spacing={5}>
-                  <NotchedInput
-                    label="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    type={showPassword ? "text" : "password"}
-                    isDark={isDark}
-                  />
-
+                  <NotchedInput label="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} type={showPassword ? "text" : "password"} isDark={isDark} />
                   <Checkbox
                     isChecked={showPassword}
                     onChange={(e) => setShowPassword(e.target.checked)}
                     size="md"
                     sx={{
-                      ".chakra-checkbox__control": {
-                        borderColor: isDark ? "#5f6368" : "#dadce0",
-                        bg: "transparent",
-                        borderRadius: "3px",
-                        borderWidth: "2px",
-                      },
-                      ".chakra-checkbox__control[data-checked]": {
-                        bg: isDark ? "#8ab4f8" : "#1a73e8",
-                        borderColor: isDark ? "#8ab4f8" : "#1a73e8",
-                        color: isDark ? "#062e6f" : "white",
-                      },
+                      ".chakra-checkbox__control": { borderColor: isDark ? "#5f6368" : "#dadce0", bg: "transparent", borderRadius: "3px", borderWidth: "2px" },
+                      ".chakra-checkbox__control[data-checked]": { bg: isDark ? "#8ab4f8" : "#1a73e8", borderColor: isDark ? "#8ab4f8" : "#1a73e8", color: isDark ? "#062e6f" : "white" },
                     }}
                   >
-                    <Text fontSize="14px" color={bodyTextC}>
-                      Show password
-                    </Text>
+                    <Text fontSize="14px" color={bodyTextC}>Show password</Text>
                   </Checkbox>
                 </VStack>
-
                 <HStack justify="space-between" align="center" pt={10}>
-                  <Link
-                    href="https://accounts.google.com/signin/v2/challenge/pwd"
-                    isExternal
-                    color={linkColor}
-                    fontSize="14px"
-                    fontWeight="500"
-                    _hover={{ textDecoration: "underline" }}
-                  >
-                    Try another way
-                  </Link>
+                  <Link href="https://accounts.google.com/signin/v2/challenge/pwd" isExternal color={linkColor} fontSize="14px" fontWeight="500" _hover={{ textDecoration: "underline" }}>Try another way</Link>
                   <NextBtn onClick={handleLogin} />
                 </HStack>
               </Flex>
@@ -393,39 +378,21 @@ export default function Login() {
         </Box>
       </Flex>
 
-      {/* Footer */}
+      {/* Desktop footer only */}
       <Flex
+        display={{ base: "none", md: "flex" }}
         w="100%"
         justify="space-between"
         align="center"
         px={8}
         py={5}
         color={footerC}
-        direction={{ base: "column", sm: "row" }}
-        gap={{ base: 3, sm: 0 }}
       >
-        <Select
-          w="fit-content"
-          minW="210px"
-          bg="transparent"
-          border="none"
-          color={footerC}
-          fontSize="13px"
-          _focus={{ outline: "none", boxShadow: "none" }}
-          iconColor={footerC}
-          cursor="pointer"
-        >
-          <option value="en" style={{ background: isDark ? "#202124" : "white", color: isDark ? "white" : "#202124" }}>
-            English (United States)
-          </option>
-          <option value="fil" style={{ background: isDark ? "#202124" : "white", color: isDark ? "white" : "#202124" }}>
-            Filipino
-          </option>
-          <option value="es" style={{ background: isDark ? "#202124" : "white", color: isDark ? "white" : "#202124" }}>
-            Español
-          </option>
+        <Select w="fit-content" minW="210px" bg="transparent" border="none" color={footerC} fontSize="13px" _focus={{ outline: "none", boxShadow: "none" }} iconColor={footerC} cursor="pointer">
+          <option value="en" style={{ background: isDark ? "#202124" : "white", color: isDark ? "white" : "#202124" }}>English (United States)</option>
+          <option value="fil" style={{ background: isDark ? "#202124" : "white", color: isDark ? "white" : "#202124" }}>Filipino</option>
+          <option value="es"  style={{ background: isDark ? "#202124" : "white", color: isDark ? "white" : "#202124" }}>Español</option>
         </Select>
-
         <HStack spacing={8}>
           <Link href="https://support.google.com/accounts" isExternal color={footerC} fontSize="13px" _hover={{ textDecoration: "underline" }}>Help</Link>
           <Link href="https://policies.google.com/privacy" isExternal color={footerC} fontSize="13px" _hover={{ textDecoration: "underline" }}>Privacy</Link>
