@@ -8,6 +8,7 @@ import Welcome from "./pages/Welcome";
 import Login from "./pages/Login";
 import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
+import About from "./pages/About";
 import theme from "./theme";
 
 // Loading wrapper for transitions
@@ -55,6 +56,14 @@ export default function App() {
                   element={
                     <ProtectedRoute>
                       <Cart />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/about"
+                  element={
+                    <ProtectedRoute>
+                      <About />
                     </ProtectedRoute>
                   }
                 />

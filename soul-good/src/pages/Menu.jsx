@@ -214,6 +214,15 @@ const randomIcons = useMemo(() => {
           <HStack spacing={3}>
             <Button
               as={RouterLink}
+              to="/about"
+              colorScheme="orange"
+              variant="ghost"
+              size="sm"
+            >
+              About
+            </Button>
+            <Button
+              as={RouterLink}
               to="/cart"
               colorScheme="orange"
               variant="ghost"
