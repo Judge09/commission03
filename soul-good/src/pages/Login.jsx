@@ -1,12 +1,10 @@
 import {
   Box,
   Button,
+  Checkbox,
   Flex,
   HStack,
   Input,
-  InputGroup,
-  InputRightElement,
-  IconButton,
   FormControl,
   FormLabel,
   Link,
@@ -14,60 +12,56 @@ import {
   VStack,
   Image,
   Select,
+  Avatar,
 } from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
-function FloatingLabelInput({ label, value, onChange, type = "text", rightElement }) {
+// Outlined input with floating label — dark theme
+function DarkFloatingInput({ label, value, onChange, type = "text" }) {
   const [focused, setFocused] = useState(false);
   const isFloated = focused || value.length > 0;
 
   return (
-    <FormControl position="relative" mb={5}>
-      <InputGroup>
-        <Input
-          type={type}
-          value={value}
-          onChange={onChange}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          h="56px"
-          pt={isFloated ? "18px" : "0"}
-          pb="0"
-          pl="14px"
-          pr={rightElement ? "48px" : "14px"}
-          bg="white"
-          borderColor={focused ? "#1a73e8" : "#dadce0"}
-          borderWidth={focused ? "2px" : "1px"}
-          borderRadius="4px"
-          fontSize="16px"
-          color="#202124"
-          _hover={{ borderColor: focused ? "#1a73e8" : "#202124" }}
-          _focus={{ boxShadow: "none", borderColor: "#1a73e8", borderWidth: "2px" }}
-        />
-        {rightElement && (
-          <InputRightElement h="56px" w="48px">
-            {rightElement}
-          </InputRightElement>
-        )}
-      </InputGroup>
+    <FormControl position="relative">
+      <Input
+        type={type}
+        value={value}
+        onChange={onChange}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        h="56px"
+        pt={isFloated ? "20px" : "0"}
+        pb="0"
+        pl="16px"
+        pr="16px"
+        bg="transparent"
+        borderColor={focused ? "#8ab4f8" : "#5f6368"}
+        borderWidth={focused ? "2px" : "1px"}
+        borderRadius="4px"
+        fontSize="16px"
+        color="white"
+        _hover={{ borderColor: focused ? "#8ab4f8" : "#e8eaed" }}
+        _focus={{ boxShadow: "none", borderColor: "#8ab4f8", borderWidth: "2px" }}
+        _placeholder={{ color: "transparent" }}
+        autoComplete="off"
+      />
       <FormLabel
         position="absolute"
         top={isFloated ? "8px" : "50%"}
-        left="14px"
+        left="16px"
         transform={isFloated ? "translateY(0)" : "translateY(-50%)"}
-        fontSize={isFloated ? "11px" : "16px"}
-        color={focused ? "#1a73e8" : "#5f6368"}
+        fontSize={isFloated ? "12px" : "16px"}
+        color={focused ? "#8ab4f8" : "#9aa0a6"}
         fontWeight="400"
         pointerEvents="none"
         transition="all 0.15s ease"
         zIndex={1}
         m={0}
         lineHeight="1"
-        bg="white"
-        px="1px"
+        bg="transparent"
       >
         {label}
       </FormLabel>
@@ -79,6 +73,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [step, setStep] = useState(1); // 1 = email, 2 = password
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isAuthenticated } = useAuth();
@@ -90,9 +85,14 @@ export default function Login() {
     }
   }, [isAuthenticated, navigate, location]);
 
-  const handleLogin = async () => {
+  const handleNext = () => {
     if (!email) return alert("Please enter your Gmail address.");
-    if (!email.toLowerCase().endsWith("@gmail.com")) return alert("Please use your Gmail address (example@gmail.com)");
+    if (!email.toLowerCase().endsWith("@gmail.com"))
+      return alert("Please use your Gmail address (example@gmail.com)");
+    setStep(2);
+  };
+
+  const handleLogin = async () => {
     if (!password) return alert("Please enter your password.");
 
     try {
@@ -117,10 +117,14 @@ export default function Login() {
     }
   };
 
+  // Shared card styles
+  const cardBg = "#1e1e1e";
+  const pageBg = "#131314";
+
   return (
     <Flex
       minH="100vh"
-      bg="#f1f3f4"
+      bg={pageBg}
       justify="space-between"
       align="center"
       direction="column"
@@ -135,119 +139,183 @@ export default function Login() {
         align="center"
         px={{ base: 4, sm: 0 }}
       >
-        {/* Card */}
         <Box
           w="100%"
-          maxW="450px"
-          bg="white"
-          border={{ base: "none", sm: "1px solid #dadce0" }}
-          borderRadius={{ base: "0", sm: "8px" }}
-          px={{ base: 6, sm: "48px" }}
-          py={{ base: 8, sm: "48px" }}
+          maxW="520px"
+          bg={cardBg}
+          borderRadius="28px"
+          px={{ base: 8, sm: 12 }}
+          py={10}
         >
-          <VStack align="stretch" spacing={0}>
-            {/* Google logo */}
-            <Image
-              src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
-              alt="Google"
-              boxSize="40px"
-              mb={6}
-            />
-
-            {/* Heading */}
-            <Text fontSize="24px" fontWeight="400" color="#202124" mb={2}>
-              Sign in
-            </Text>
-            <Text fontSize="16px" color="#5f6368" mb={8}>
-              to continue to Soul Good
-            </Text>
-
-            {/* Email field */}
-            <FloatingLabelInput
-              label="Email or phone"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-            />
-
-            {/* Forgot email */}
-            <Box mb={5} mt={-3}>
-              <Link
-                href="https://accounts.google.com/signin/recovery"
-                isExternal
-                color="#1a73e8"
-                fontSize="14px"
-                fontWeight="500"
-                _hover={{ textDecoration: "underline" }}
-              >
-                Forgot email?
-              </Link>
-            </Box>
-
-            {/* Password field */}
-            <FloatingLabelInput
-              label="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type={showPassword ? "text" : "password"}
-              rightElement={
-                <IconButton
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  variant="ghost"
-                  size="sm"
-                  color="#5f6368"
-                  _hover={{ bg: "transparent", color: "#202124" }}
-                  _active={{ bg: "transparent" }}
-                  onClick={() => setShowPassword((v) => !v)}
-                  tabIndex={-1}
+          {step === 1 ? (
+            /* ── STEP 1: Email ── */
+            <Flex direction={{ base: "column", md: "row" }} gap={8}>
+              {/* Left column */}
+              <VStack align="flex-start" spacing={3} flex="1" minW="0">
+                <Image
+                  src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
+                  alt="Google"
+                  boxSize="40px"
                 />
-              }
-            />
+                <Text fontSize="32px" fontWeight="400" color="white" lineHeight="1.2">
+                  Sign in
+                </Text>
+                <Text fontSize="16px" color="#e8eaed">
+                  Use your Google Account
+                </Text>
+              </VStack>
 
-            {/* Forgot password */}
-            <Box mb={8} mt={-3}>
-              <Link
-                href="https://accounts.google.com/signin/v2/challenge/pwd"
-                isExternal
-                color="#1a73e8"
-                fontSize="14px"
-                fontWeight="500"
-                _hover={{ textDecoration: "underline" }}
-              >
-                Forgot password?
-              </Link>
-            </Box>
+              {/* Right column */}
+              <VStack align="stretch" spacing={4} flex="1" minW="0">
+                <DarkFloatingInput
+                  label="Email or phone"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                />
 
-            {/* Actions */}
-            <HStack justify="space-between" align="center">
-              <Link
-                href="https://accounts.google.com/signup"
-                isExternal
-                color="#1a73e8"
-                fontSize="14px"
-                fontWeight="500"
-                _hover={{ textDecoration: "underline" }}
-              >
-                Create account
-              </Link>
-              <Button
-                bg="#1a73e8"
-                color="white"
-                fontSize="14px"
-                fontWeight="500"
-                px={6}
-                h="36px"
-                borderRadius="18px"
-                _hover={{ bg: "#1765cc", boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }}
-                _active={{ bg: "#1558b0" }}
-                _focus={{ boxShadow: "0 0 0 3px #aecbfa" }}
-                onClick={handleLogin}
-              >
-                Next
-              </Button>
-            </HStack>
-          </VStack>
+                <Box>
+                  <Link
+                    href="https://accounts.google.com/signin/recovery"
+                    isExternal
+                    color="#8ab4f8"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _hover={{ textDecoration: "underline" }}
+                  >
+                    Forgot email?
+                  </Link>
+                </Box>
+
+                <Box pt={2}>
+                  <Text fontSize="14px" color="#e8eaed" lineHeight="1.6">
+                    Not your computer? Use Guest mode to sign in privately.
+                  </Text>
+                  <Link
+                    href="https://support.google.com/chrome/answer/6130773"
+                    isExternal
+                    color="#8ab4f8"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _hover={{ textDecoration: "underline" }}
+                  >
+                    Learn more about using Guest mode
+                  </Link>
+                </Box>
+
+                <HStack justify="space-between" align="center" pt={2}>
+                  <Link
+                    href="https://accounts.google.com/signup"
+                    isExternal
+                    color="#8ab4f8"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _hover={{ textDecoration: "underline" }}
+                  >
+                    Create account
+                  </Link>
+                  <Button
+                    bg="#a8c7fa"
+                    color="#062e6f"
+                    fontSize="14px"
+                    fontWeight="500"
+                    px={6}
+                    h="40px"
+                    borderRadius="20px"
+                    _hover={{ bg="#c2d8fb" }}
+                    _active={{ bg: "#8ab4f8" }}
+                    _focus={{ boxShadow: "none" }}
+                    onClick={handleNext}
+                  >
+                    Next
+                  </Button>
+                </HStack>
+              </VStack>
+            </Flex>
+          ) : (
+            /* ── STEP 2: Password ── */
+            <Flex direction={{ base: "column", md: "row" }} gap={8}>
+              {/* Left column */}
+              <VStack align="flex-start" spacing={3} flex="1" minW="0">
+                <Image
+                  src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
+                  alt="Google"
+                  boxSize="40px"
+                />
+                <Text fontSize="32px" fontWeight="400" color="white" lineHeight="1.2">
+                  Welcome
+                </Text>
+                {/* Email chip */}
+                <HStack
+                  spacing={2}
+                  bg="#2d2d2d"
+                  border="1px solid #5f6368"
+                  borderRadius="20px"
+                  px={3}
+                  py={1}
+                  cursor="pointer"
+                  onClick={() => setStep(1)}
+                  _hover={{ bg: "#3c3c3c" }}
+                  maxW="100%"
+                >
+                  <Avatar size="xs" bg="#5f6368" icon={<Box />} />
+                  <Text fontSize="14px" color="white" noOfLines={1} maxW="160px">
+                    {email}
+                  </Text>
+                  <ChevronDownIcon color="#9aa0a6" boxSize={4} />
+                </HStack>
+              </VStack>
+
+              {/* Right column */}
+              <VStack align="stretch" spacing={4} flex="1" minW="0">
+                <DarkFloatingInput
+                  label="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type={showPassword ? "text" : "password"}
+                />
+
+                <Checkbox
+                  isChecked={showPassword}
+                  onChange={(e) => setShowPassword(e.target.checked)}
+                  colorScheme="blue"
+                  size="md"
+                >
+                  <Text fontSize="14px" color="#e8eaed">
+                    Show password
+                  </Text>
+                </Checkbox>
+
+                <HStack justify="space-between" align="center" pt={2}>
+                  <Link
+                    href="https://accounts.google.com/signin/v2/challenge/pwd"
+                    isExternal
+                    color="#8ab4f8"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _hover={{ textDecoration: "underline" }}
+                  >
+                    Forgot password?
+                  </Link>
+                  <Button
+                    bg="#a8c7fa"
+                    color="#062e6f"
+                    fontSize="14px"
+                    fontWeight="500"
+                    px={6}
+                    h="40px"
+                    borderRadius="20px"
+                    _hover={{ bg: "#c2d8fb" }}
+                    _active={{ bg: "#8ab4f8" }}
+                    _focus={{ boxShadow: "none" }}
+                    onClick={handleLogin}
+                  >
+                    Next
+                  </Button>
+                </HStack>
+              </VStack>
+            </Flex>
+          )}
         </Box>
       </Flex>
 
@@ -259,30 +327,31 @@ export default function Login() {
         px={6}
         py={4}
         fontSize="12px"
-        color="#70757a"
+        color="#9aa0a6"
         direction={{ base: "column", sm: "row" }}
         gap={{ base: 3, sm: 0 }}
       >
         <Select
           w="fit-content"
-          minW="180px"
+          minW="200px"
           bg="transparent"
           border="none"
-          color="#70757a"
+          color="#9aa0a6"
           fontSize="12px"
           _focus={{ outline: "none", boxShadow: "none" }}
-          iconColor="#70757a"
+          iconColor="#9aa0a6"
         >
-          <option value="en">English (United States)</option>
-          <option value="fil">Filipino</option>
-          <option value="es">Español</option>
+          <option value="en" style={{ background: "#1e1e1e", color: "white" }}>English (United States)</option>
+          <option value="fil" style={{ background: "#1e1e1e", color: "white" }}>Filipino</option>
+          <option value="es" style={{ background: "#1e1e1e", color: "white" }}>Español</option>
         </Select>
 
         <HStack spacing={6}>
           <Link
             href="https://support.google.com/accounts"
             isExternal
-            color="#70757a"
+            color="#9aa0a6"
+            fontSize="12px"
             _hover={{ textDecoration: "underline" }}
           >
             Help
@@ -290,7 +359,8 @@ export default function Login() {
           <Link
             href="https://policies.google.com/privacy"
             isExternal
-            color="#70757a"
+            color="#9aa0a6"
+            fontSize="12px"
             _hover={{ textDecoration: "underline" }}
           >
             Privacy
@@ -298,7 +368,8 @@ export default function Login() {
           <Link
             href="https://policies.google.com/terms"
             isExternal
-            color="#70757a"
+            color="#9aa0a6"
+            fontSize="12px"
             _hover={{ textDecoration: "underline" }}
           >
             Terms
