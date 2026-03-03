@@ -223,13 +223,14 @@ const randomIcons = useMemo(() => {
               Soul Good Cafe
             </Heading>
           </HStack>
-          <HStack spacing={3}>
+          <HStack spacing={{ base: 1, md: 3 }}>
             <Button
               as={RouterLink}
               to="/about"
               colorScheme="orange"
               variant="ghost"
               size="sm"
+              display={{ base: "none", md: "inline-flex" }}
             >
               About
             </Button>
@@ -240,8 +241,9 @@ const randomIcons = useMemo(() => {
               variant="ghost"
               size="sm"
               position="relative"
+              px={{ base: 2, md: 3 }}
             >
-              View Cart
+              <Box display={{ base: "none", md: "inline" }}>View </Box>Cart
               {cartItemCount > 0 && (
                 <Badge
                   position="absolute"
@@ -261,8 +263,9 @@ const randomIcons = useMemo(() => {
               variant="outline"
               size="sm"
               onClick={onOpen}
+              px={{ base: 2, md: 3 }}
             >
-              Logout
+              <Box display={{ base: "none", md: "inline" }}>Log</Box>out
             </Button>
           </HStack>
         </HStack>
@@ -376,7 +379,7 @@ const randomIcons = useMemo(() => {
         </Box>
 
         {/* Menu section */}
-        <Container maxW="container.lg" py={{ base: 4, md: 8 }}>
+        <Container maxW="container.lg" px={{ base: 3, md: 6 }} py={{ base: 4, md: 8 }}>
           <VStack spacing={6} align="stretch">
             {/* Categories + Search inline (responsive) - STICKY HEADER */}
             <HStack
@@ -386,9 +389,9 @@ const randomIcons = useMemo(() => {
               top={{ base: "-1px", md: 0 }}
               bg="orange.50"
               zIndex={100}
-              py={4}
-              px={{ base: 4, md: 0 }}
-              mx={{ base: -4, md: 0 }}
+              py={3}
+              px={{ base: 3, md: 0 }}
+              mx={{ base: -3, md: 0 }}
               boxShadow="sm"
               backdropFilter="blur(10px)"
               borderBottom="1px solid"
@@ -443,7 +446,7 @@ const randomIcons = useMemo(() => {
                 md: "repeat(2, 1fr)",
                 lg: "repeat(3, 1fr)",
               }}
-              gap={6}
+              gap={{ base: 3, md: 6 }}
             >
               {filtered.map((item) => (
                 <MenuItemCard

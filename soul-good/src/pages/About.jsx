@@ -47,8 +47,9 @@ export default function About() {
           colorScheme="orange"
           variant="ghost"
           size="sm"
+          flexShrink={0}
         >
-          ← Back to Menu
+          ← <Box as="span" display={{ base: "none", md: "inline" }}>Back to </Box>Menu
         </Button>
       </HStack>
 
@@ -96,11 +97,11 @@ export default function About() {
         </VStack>
       </Flex>
 
-      <Container maxW="container.md" py={{ base: 10, md: 16 }}>
+      <Container maxW="container.md" px={{ base: 3, md: 6 }} py={{ base: 8, md: 16 }}>
         <VStack spacing={8} align="stretch">
 
           {/* Our Story */}
-          <Box bg="white" borderRadius="xl" boxShadow="md" p={{ base: 6, md: 10 }}>
+          <Box bg="white" borderRadius="xl" boxShadow="md" p={{ base: 4, md: 10 }}>
             <HStack mb={4} align="center" spacing={3}>
               <Heading
                 fontSize={{ base: "xl", md: "2xl" }}
@@ -138,7 +139,7 @@ export default function About() {
           </Box>
 
           {/* Location & Hours */}
-          <Box bg="white" borderRadius="xl" boxShadow="md" p={{ base: 6, md: 10 }}>
+          <Box bg="white" borderRadius="xl" boxShadow="md" p={{ base: 4, md: 10 }}>
             <Heading
               fontSize={{ base: "xl", md: "2xl" }}
               color="orange.600"
@@ -204,10 +205,10 @@ export default function About() {
                 </HStack>
                 <VStack align="stretch" spacing={2} w="100%">
                   {hours.map(({ days, time }) => (
-                    <Flex key={days} justify="space-between" align="center" gap={4}>
+                    <Box key={days}>
                       <Text fontSize="sm" color="gray.600" fontFamily="var(--font-lora)">{days}</Text>
-                      <Text fontSize="sm" fontWeight="600" color="gray.800" fontFamily="var(--font-lora)" flexShrink={0}>{time}</Text>
-                    </Flex>
+                      <Text fontSize="sm" fontWeight="600" color="gray.800" fontFamily="var(--font-lora)">{time}</Text>
+                    </Box>
                   ))}
                 </VStack>
               </VStack>
@@ -215,7 +216,7 @@ export default function About() {
           </Box>
 
           {/* Social Media */}
-          <Box bg="white" borderRadius="xl" boxShadow="md" p={{ base: 6, md: 10 }} textAlign="center">
+          <Box bg="white" borderRadius="xl" boxShadow="md" p={{ base: 4, md: 10 }} textAlign="center">
             <Heading
               fontSize={{ base: "xl", md: "2xl" }}
               color="orange.600"

@@ -134,18 +134,18 @@ export default function Cart() {
         bg="white"
         boxShadow="sm"
       >
-        <HStack spacing={3}>
-          <Image src={Logo} alt="Soul Good Logo" boxSize="40px" />
-          <Heading fontSize="lg" color="orange.600" fontFamily="var(--font-recoleta)">
+        <HStack spacing={2}>
+          <Image src={Logo} alt="Soul Good Logo" boxSize="36px" flexShrink={0} />
+          <Heading fontSize={{ base: "md", md: "lg" }} color="orange.600" fontFamily="var(--font-recoleta)" noOfLines={1}>
             Soul Good Cafe
           </Heading>
         </HStack>
-        <Button as={RouterLink} to="/menu" colorScheme="orange" variant="ghost" size="sm">
-          ← Back to Menu
+        <Button as={RouterLink} to="/menu" colorScheme="orange" variant="ghost" size="sm" flexShrink={0}>
+          ← Back
         </Button>
       </HStack>
 
-      <Container maxW="container.md" py={{ base: 6, md: 10 }}>
+      <Container maxW="container.md" px={{ base: 3, md: 6 }} py={{ base: 4, md: 10 }}>
         {/* Page title */}
         <HStack mb={6} spacing={3} align="center">
           <Icon as={FaShoppingCart} color="orange.500" boxSize={6} />
@@ -190,43 +190,53 @@ export default function Cart() {
                   transition="box-shadow 0.15s"
                   _hover={{ boxShadow: "md" }}
                 >
-                  <HStack spacing={4} align="center">
+                  {/* Top row: image + name */}
+                  <HStack spacing={3} align="center" mb={3}>
                     <Image
                       src={item.image || "/default-food.jpg"}
                       fallbackSrc="/default-food.jpg"
-                      boxSize={{ base: "64px", md: "80px" }}
+                      boxSize={{ base: "56px", md: "72px" }}
                       objectFit="cover"
                       borderRadius="xl"
                       flexShrink={0}
                     />
                     <Box flex={1} minW={0}>
-                      <Text fontWeight="700" fontSize={{ base: "sm", md: "md" }} noOfLines={1} fontFamily="var(--font-the-seasons)" color="gray.800">
+                      <Text
+                        fontWeight="700"
+                        fontSize={{ base: "sm", md: "md" }}
+                        noOfLines={2}
+                        fontFamily="var(--font-the-seasons)"
+                        color="gray.800"
+                        lineHeight="1.3"
+                      >
                         {item.name}
                       </Text>
-                      <Text fontSize="sm" color="gray.400" fontFamily="var(--font-lora)">
+                      <Text fontSize="xs" color="gray.400" fontFamily="var(--font-lora)" mt={0.5}>
                         ₱{item.price} each
                       </Text>
                     </Box>
-                    <VStack spacing={1} align="flex-end" flexShrink={0}>
-                      <QuantityStepper
-                        quantity={item.quantity}
-                        onIncrease={() => handleIncrease(item)}
-                        onDecrease={() => handleDecrease(item)}
-                      />
+                  </HStack>
+                  {/* Bottom row: stepper + subtotal + trash */}
+                  <HStack justify="space-between" align="center">
+                    <QuantityStepper
+                      quantity={item.quantity}
+                      onIncrease={() => handleIncrease(item)}
+                      onDecrease={() => handleDecrease(item)}
+                    />
+                    <HStack spacing={3} align="center">
                       <Text fontWeight="700" fontSize="sm" color="orange.600" fontFamily="var(--font-the-seasons)">
                         ₱{(item.price * item.quantity).toFixed(2)}
                       </Text>
-                    </VStack>
-                    <IconButton
-                      aria-label="Remove item"
-                      icon={<FaTrash />}
-                      size="sm"
-                      variant="ghost"
-                      colorScheme="red"
-                      borderRadius="full"
-                      flexShrink={0}
-                      onClick={() => removeFromCart(item.id)}
-                    />
+                      <IconButton
+                        aria-label="Remove item"
+                        icon={<FaTrash />}
+                        size="sm"
+                        variant="ghost"
+                        colorScheme="red"
+                        borderRadius="full"
+                        onClick={() => removeFromCart(item.id)}
+                      />
+                    </HStack>
                   </HStack>
                 </Box>
               ))}
@@ -334,8 +344,8 @@ export default function Cart() {
               </ModalHeader>
               <ModalCloseButton color="white" />
 
-              <ModalBody py={6}>
-                <VStack spacing={5} align="stretch">
+              <ModalBody py={5} px={{ base: 4, md: 6 }}>
+                <VStack spacing={4} align="stretch">
 
                   {/* Order type */}
                   <FormControl>
@@ -465,19 +475,30 @@ export default function Cart() {
                 </VStack>
               </ModalBody>
 
-              <ModalFooter gap={3} borderTop="1px solid" borderColor="orange.100">
-                <Button variant="ghost" onClick={handleClose} fontFamily="var(--font-lora)">
+              <ModalFooter
+                borderTop="1px solid"
+                borderColor="orange.100"
+                flexDirection={{ base: "column-reverse", md: "row" }}
+                gap={2}
+                px={{ base: 4, md: 6 }}
+              >
+                <Button
+                  variant="ghost"
+                  onClick={handleClose}
+                  fontFamily="var(--font-lora)"
+                  w={{ base: "full", md: "auto" }}
+                >
                   Cancel
                 </Button>
                 <Button
                   colorScheme="orange"
                   borderRadius="full"
-                  px={8}
                   fontFamily="var(--font-lora)"
                   fontWeight="600"
                   isLoading={loading}
                   loadingText="Placing order..."
                   onClick={handlePlaceOrder}
+                  w={{ base: "full", md: "auto" }}
                 >
                   Place Order · ₱{cartTotal.toFixed(2)}
                 </Button>

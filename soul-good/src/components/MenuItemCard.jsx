@@ -10,6 +10,7 @@ import {
   Stack,
   useColorModeValue,
   useDisclosure,
+  useBreakpointValue,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -26,33 +27,35 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 
 // Inline +/- stepper — used both on the card and inside the modal
-function QuantityStepper({ quantity, onAdd, onRemove, size = "sm" }) {
+function QuantityStepper({ quantity, onAdd, onRemove, size = "sm", compact = false }) {
   if (quantity === 0) {
     return (
       <Button
-        size={size}
+        size={compact ? "xs" : size}
         colorScheme="orange"
         borderRadius="full"
-        px={5}
+        px={compact ? 3 : 5}
+        fontSize={compact ? "11px" : undefined}
         onClick={(e) => { e.stopPropagation(); onAdd(); }}
         fontFamily="var(--font-lora)"
+        w={compact ? "full" : undefined}
       >
-        Add to Cart
+        {compact ? "+ Add" : "Add to Cart"}
       </Button>
     );
   }
   return (
     <HStack
-      spacing={2}
+      spacing={compact ? 1 : 2}
       bg="orange.500"
       borderRadius="full"
-      px={2}
+      px={compact ? 1 : 2}
       py={1}
       onClick={(e) => e.stopPropagation()}
     >
       <IconButton
         aria-label="decrease"
-        icon={<MinusIcon />}
+        icon={<MinusIcon boxSize={compact ? "8px" : undefined} />}
         size="xs"
         variant="ghost"
         color="white"
@@ -65,7 +68,7 @@ function QuantityStepper({ quantity, onAdd, onRemove, size = "sm" }) {
       </Text>
       <IconButton
         aria-label="increase"
-        icon={<AddIcon />}
+        icon={<AddIcon boxSize={compact ? "8px" : undefined} />}
         size="xs"
         variant="ghost"
         color="white"
@@ -89,6 +92,7 @@ export default function MenuItemCard({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.700", "gray.200");
+  const compactStepper = useBreakpointValue({ base: true, md: false });
   const isActive = isFavorite && quantity > 0;
 
   const handleKeyDown = (e) => {
@@ -173,7 +177,7 @@ export default function MenuItemCard({
         </Box>
 
         {/* Card body */}
-        <Flex direction="column" justify="space-between" flex="1" p={3} gap={2}>
+        <Flex direction="column" justify="space-between" flex="1" p={{ base: 2, md: 3 }} gap={2}>
           <Heading size="sm" color={textColor} noOfLines={1} fontFamily="var(--font-the-seasons)">
             {item.name}
           </Heading>
@@ -183,7 +187,7 @@ export default function MenuItemCard({
 
           {/* Stepper pinned to bottom of card */}
           <Flex justify="center" pt={1} onClick={(e) => e.stopPropagation()}>
-            <QuantityStepper quantity={quantity} onAdd={onAdd} onRemove={onRemove} />
+            <QuantityStepper quantity={quantity} onAdd={onAdd} onRemove={onRemove} compact={compactStepper} />
           </Flex>
         </Flex>
       </Box>
