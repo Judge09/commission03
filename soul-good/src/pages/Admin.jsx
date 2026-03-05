@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   VStack,
@@ -96,11 +96,50 @@ function TagInput({ value = [], onChange, placeholder }) {
 }
 
 // Local image slots available in /public
-const LOCAL_IMAGES = Array.from({ length: 36 }, (_, i) => `/${i + 1}.png`);
+const BASE_LOCAL_IMAGES = Array.from({ length: 36 }, (_, i) => `/${i + 1}.png`);
 
 // ─── Image picker ─────────────────────────────────────────────────────────────
 function ImagePicker({ value, onChange }) {
   const [showPicker, setShowPicker] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const fileInputRef = useRef();
+  const toast = useToast();
+
+  // All images = base local + anything uploaded this session
+  const allImages = [...BASE_LOCAL_IMAGES, ...uploadedImages];
+
+  const handleUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const ext = file.name.split(".").pop();
+    const fileName = `${Date.now()}.${ext}`;
+
+    setUploading(true);
+    try {
+      const { error } = await supabase.storage
+        .from("menu-images")
+        .upload(fileName, file, { upsert: true });
+
+      if (error) throw error;
+
+      const { data } = supabase.storage.from("menu-images").getPublicUrl(fileName);
+      const publicUrl = data.publicUrl;
+
+      // Add to uploaded list and auto-select it
+      setUploadedImages((prev) => [...prev, publicUrl]);
+      onChange(publicUrl);
+      setShowPicker(true);
+
+      toast({ title: "Image uploaded", status: "success", duration: 1800, position: "top" });
+    } catch (err) {
+      toast({ title: "Upload failed", description: err.message, status: "error", duration: 3000, position: "top" });
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  };
 
   return (
     <FormControl>
@@ -134,14 +173,33 @@ function ImagePicker({ value, onChange }) {
             placeholder="/1.png or https://..."
             size="sm"
           />
-          <Button
-            size="xs"
-            variant="outline"
-            colorScheme="orange"
-            onClick={() => setShowPicker((p) => !p)}
-          >
-            {showPicker ? "Hide picker" : "Pick from existing images"}
-          </Button>
+          <HStack spacing={1}>
+            <Button
+              size="xs"
+              variant="outline"
+              colorScheme="orange"
+              flex={1}
+              onClick={() => setShowPicker((p) => !p)}
+            >
+              {showPicker ? "Hide picker" : "Choose image"}
+            </Button>
+            <Button
+              size="xs"
+              colorScheme="orange"
+              flex={1}
+              isLoading={uploading}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Upload new
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleUpload}
+            />
+          </HStack>
         </VStack>
       </HStack>
 
@@ -156,12 +214,11 @@ function ImagePicker({ value, onChange }) {
           borderColor="orange.100"
           p={2}
         >
-          <Box
-            display="grid"
-            gridTemplateColumns="repeat(6, 1fr)"
-            gap={2}
-          >
-            {LOCAL_IMAGES.map((src) => (
+          {uploadedImages.length > 0 && (
+            <Text fontSize="xs" color="gray.400" mb={1} px={1}>Uploaded</Text>
+          )}
+          <Box display="grid" gridTemplateColumns="repeat(6, 1fr)" gap={2}>
+            {allImages.map((src) => (
               <Box
                 key={src}
                 cursor="pointer"
@@ -182,7 +239,7 @@ function ImagePicker({ value, onChange }) {
                   fallbackSrc="/default-food.jpg"
                 />
                 <Text fontSize="9px" textAlign="center" color="gray.500" noOfLines={1} px={1}>
-                  {src}
+                  {src.startsWith("/") ? src : "uploaded"}
                 </Text>
               </Box>
             ))}
@@ -638,7 +695,6 @@ export default function Admin() {
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loadingItems, setLoadingItems] = useState(false);
-  const toast = useToast();
 
   const loadAll = async () => {
     setLoadingItems(true);
