@@ -95,36 +95,109 @@ function TagInput({ value = [], onChange, placeholder }) {
   );
 }
 
+// Local image slots available in /public
+const LOCAL_IMAGES = Array.from({ length: 36 }, (_, i) => `/${i + 1}.png`);
+
+// ─── Image picker ─────────────────────────────────────────────────────────────
+function ImagePicker({ value, onChange }) {
+  const [showPicker, setShowPicker] = useState(false);
+
+  return (
+    <FormControl>
+      <FormLabel fontSize="sm">Image</FormLabel>
+
+      {/* Preview + URL input row */}
+      <HStack spacing={3} align="flex-start">
+        <Box
+          flexShrink={0}
+          w="80px"
+          h="80px"
+          borderRadius="md"
+          overflow="hidden"
+          border="2px solid"
+          borderColor="orange.200"
+          bg="gray.100"
+        >
+          <Image
+            src={value || ""}
+            alt="preview"
+            w="100%"
+            h="100%"
+            objectFit="cover"
+            fallbackSrc="/default-food.jpg"
+          />
+        </Box>
+        <VStack spacing={1} align="stretch" flex={1}>
+          <Input
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="/1.png or https://..."
+            size="sm"
+          />
+          <Button
+            size="xs"
+            variant="outline"
+            colorScheme="orange"
+            onClick={() => setShowPicker((p) => !p)}
+          >
+            {showPicker ? "Hide picker" : "Pick from existing images"}
+          </Button>
+        </VStack>
+      </HStack>
+
+      {/* Grid picker */}
+      {showPicker && (
+        <Box
+          mt={3}
+          maxH="220px"
+          overflowY="auto"
+          borderRadius="md"
+          border="1px solid"
+          borderColor="orange.100"
+          p={2}
+        >
+          <Box
+            display="grid"
+            gridTemplateColumns="repeat(6, 1fr)"
+            gap={2}
+          >
+            {LOCAL_IMAGES.map((src) => (
+              <Box
+                key={src}
+                cursor="pointer"
+                borderRadius="md"
+                overflow="hidden"
+                border="2px solid"
+                borderColor={value === src ? "orange.400" : "transparent"}
+                onClick={() => { onChange(src); setShowPicker(false); }}
+                _hover={{ borderColor: "orange.300" }}
+                transition="border-color 0.15s"
+              >
+                <Image
+                  src={src}
+                  alt={src}
+                  w="100%"
+                  h="48px"
+                  objectFit="cover"
+                  fallbackSrc="/default-food.jpg"
+                />
+                <Text fontSize="9px" textAlign="center" color="gray.500" noOfLines={1} px={1}>
+                  {src}
+                </Text>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      )}
+    </FormControl>
+  );
+}
+
 // ─── Item form fields (shared by Edit + Add) ─────────────────────────────────
 function ItemForm({ form, setForm, categories }) {
   return (
     <VStack spacing={4} align="stretch">
-      {form.image && (
-        <Box textAlign="center">
-          <Image
-            src={form.image}
-            alt={form.name}
-            maxH="180px"
-            objectFit="cover"
-            borderRadius="md"
-            mx="auto"
-            fallbackSrc="/default-food.jpg"
-          />
-        </Box>
-      )}
-
-      <FormControl>
-        <FormLabel fontSize="sm">Image Path / URL</FormLabel>
-        <Input
-          value={form.image}
-          onChange={(e) => setForm({ ...form, image: e.target.value })}
-          placeholder="/1.png or https://..."
-          size="sm"
-        />
-        <Text fontSize="xs" color="gray.500" mt={1}>
-          Use /1.png for images in /public, or paste a full URL
-        </Text>
-      </FormControl>
+      <ImagePicker value={form.image} onChange={(val) => setForm({ ...form, image: val })} />
 
       <HStack spacing={3}>
         <FormControl flex={2}>
