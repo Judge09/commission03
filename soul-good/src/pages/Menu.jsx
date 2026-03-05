@@ -22,13 +22,15 @@ import {
   ModalCloseButton,
   Icon,
   Select,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
 import { FaInstagram, FaFacebook } from "react-icons/fa";
 import { GiKnifeFork, GiCoffeeCup, GiFrenchFries, GiHotMeal } from "react-icons/gi";
-import menuItemsData from "../data/menuItems.json";
+import { useMenuItems } from "../hooks/useMenuItems";
 import Logo from "/soul-good-logo.png";
 import MenuItemCard from "../components/MenuItemCard";
 
@@ -69,6 +71,8 @@ export default function Menu() {
     getItemQuantity,
   } = useCart();
 
+  const { menuItems, loading: menuLoading } = useMenuItems();
+
   // Auto-rotate promos
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,19 +81,25 @@ export default function Menu() {
     return () => clearInterval(interval);
   }, []);
 
+  // Only show available items
+  const availableItems = useMemo(
+    () => menuItems.filter((item) => item.is_available !== false),
+    [menuItems]
+  );
+
   // Categories map
   const categories = useMemo(() => {
-    const map = { All: menuItemsData.length };
-    menuItemsData.forEach((item) => {
+    const map = { All: availableItems.length };
+    availableItems.forEach((item) => {
       const cat = item.category || "Uncategorized";
       map[cat] = (map[cat] || 0) + 1;
     });
     return map;
-  }, []);
+  }, [availableItems]);
 
   // Filter items
   const filtered = useMemo(() => {
-    return menuItemsData.filter((item) => {
+    return availableItems.filter((item) => {
       const matchesCat = category === "All" || item.category === category;
       const matchesQuery =
         !query ||
@@ -97,7 +107,7 @@ export default function Menu() {
         (item.description || "").toLowerCase().includes(query.toLowerCase());
       return matchesCat && matchesQuery;
     });
-  }, [query, category]);
+  }, [query, category, availableItems]);
 
   const nextPromo = () => setActivePromo((prev) => (prev + 1) % promos.length);
 
@@ -230,7 +240,7 @@ const randomIcons = useMemo(() => {
               colorScheme="orange"
               variant="ghost"
               size="sm"
-              display={{ base: "none", md: "inline-flex" }}
+              px={{ base: 2, md: 3 }}
             >
               About
             </Button>
@@ -439,30 +449,52 @@ const randomIcons = useMemo(() => {
 
 
             {/* Menu grid */}
-            <Box
-              display="grid"
-              gridTemplateColumns={{
-                base: "repeat(2, 1fr)",
-                md: "repeat(2, 1fr)",
-                lg: "repeat(3, 1fr)",
-              }}
-              gap={{ base: 3, md: 6 }}
-            >
-              {filtered.map((item) => (
-                <MenuItemCard
-                  key={item.id}
-                  item={item}
-                  imgFallback="/default-food.jpg"
-                  isFavorite={isFavorite(item.id)}
-                  quantity={getItemQuantity(item.id)}
-                  onToggleFavorite={() => handleToggleFavorite(item)}
-                  onAdd={() => handleAdd(item)}
-                  onRemove={() => handleRemove(item)}
-                />
-              ))}
-            </Box>
+            {menuLoading ? (
+              <Center py={12}><Spinner size="xl" color="orange.400" /></Center>
+            ) : (
+              <Box
+                display="grid"
+                gridTemplateColumns={{
+                  base: "repeat(2, 1fr)",
+                  md: "repeat(2, 1fr)",
+                  lg: "repeat(3, 1fr)",
+                }}
+                gap={{ base: 3, md: 6 }}
+              >
+                {filtered.map((item) => (
+                  <MenuItemCard
+                    key={item.id}
+                    item={item}
+                    imgFallback="/default-food.jpg"
+                    isFavorite={isFavorite(item.id)}
+                    quantity={getItemQuantity(item.id)}
+                    onToggleFavorite={() => handleToggleFavorite(item)}
+                    onAdd={() => handleAdd(item)}
+                    onRemove={() => handleRemove(item)}
+                  />
+                ))}
+              </Box>
+            )}
           </VStack>
         </Container>
+
+        {/* Discreet admin access — small dot bottom-right */}
+        <Box
+          as={RouterLink}
+          to="/admin"
+          position="fixed"
+          bottom={3}
+          right={3}
+          w="8px"
+          h="8px"
+          borderRadius="full"
+          bg="gray.300"
+          opacity={0.3}
+          _hover={{ opacity: 0.7 }}
+          transition="opacity 0.3s"
+          zIndex={999}
+          title=""
+        />
       </Box>
     </Box>
   );

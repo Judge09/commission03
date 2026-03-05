@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
 import About from "./pages/About";
+import Admin from "./pages/Admin";
 import theme from "./theme";
 
 // Loading wrapper for transitions
@@ -67,6 +68,7 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             </PageWrapper>
